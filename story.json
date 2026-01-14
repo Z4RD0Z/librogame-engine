@@ -179,19 +179,16 @@
     },
     "items": {
       "torch": {
-        "icon": "🔦",
         "description": "Una vecchia torcia di legno che emette una luce fioca ma sufficiente per illuminare i luoghi bui della cripta.",
         "image": "https://via.placeholder.com/300x200/FFA500/FFFFFF?text=Torcia",
         "usable": false
       },
       "silver_key": {
-        "icon": "🔑",
         "description": "Una piccola chiave d'argento finemente lavorata. Sembra appartenere a una serratura importante.",
         "image": "src/images/inventories/chiavi_di_ingresso.png",
         "usable": false
       },
       "potion": {
-        "icon": "🧪",
         "description": "Una pozione di colore rosso rubino che emana un leggero calore. Può ripristinare 2 punti vita.",
         "image": "https://via.placeholder.com/300x200/DC143C/FFFFFF?text=Pozione",
         "usable": true,
@@ -199,7 +196,6 @@
         "useMessage": "Bevi la pozione e senti le tue ferite guarire. +2 Vita!"
       },
       "scroll": {
-        "icon": "📜",
         "description": "Un'antica pergamena con rune misteriose. Contiene conoscenze dimenticate da tempo.",
         "image": "https://via.placeholder.com/300x200/F5DEB3/8B4513?text=Pergamena",
         "usable": false
@@ -440,19 +436,16 @@
     },
     "items": {
       "torch": {
-        "icon": "🔦",
         "description": "An old wooden torch that emits a faint but sufficient light to illuminate the dark places of the crypt.",
         "image": "https://via.placeholder.com/300x200/FFA500/FFFFFF?text=Torch",
         "usable": false
       },
       "silver_key": {
-        "icon": "🔑",
         "description": "A small, finely crafted silver key. It seems to belong to an important lock.",
         "image": "https://via.placeholder.com/300x200/C0C0C0/000000?text=Silver+Key",
         "usable": false
       },
       "potion": {
-        "icon": "🧪",
         "description": "A ruby-red potion that emanates a slight warmth. It can restore 2 health points.",
         "image": "https://via.placeholder.com/300x200/DC143C/FFFFFF?text=Potion",
         "usable": true,
@@ -460,7 +453,6 @@
         "useMessage": "You drink the potion and feel your wounds heal. +2 Health!"
       },
       "scroll": {
-        "icon": "📜",
         "description": "An ancient scroll with mysterious runes. It contains knowledge long forgotten.",
         "image": "https://via.placeholder.com/300x200/F5DEB3/8B4513?text=Scroll",
         "usable": false

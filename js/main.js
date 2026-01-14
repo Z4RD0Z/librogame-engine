@@ -24,7 +24,7 @@ const game = {
             health: 5,
             maxHealth: 5,
             sanity: 5,
-            maxSanity: 5
+            maxSanity: 5,
         },
         inventory: [],
         flags: [],
@@ -119,12 +119,13 @@ const game = {
     loadPanelStates() {
         const leftState = localStorage.getItem('leftPanel');
         const rightState = localStorage.getItem('rightPanel');
+        const container = document.getElementById('game-container');
         
         if (leftState !== null) {
             this.panels.left = leftState === 'true';
             if (!this.panels.left) {
                 document.getElementById('left-panel').classList.add('hidden');
-                document.getElementById('left-toggle-icon').textContent = '▶';
+                document.getElementById('left-toggle-icon').textContent = '>';
             }
         }
         
@@ -132,7 +133,8 @@ const game = {
             this.panels.right = rightState === 'true';
             if (!this.panels.right) {
                 document.getElementById('right-panel').classList.add('hidden');
-                document.getElementById('right-toggle-icon').textContent = '◀';
+                document.getElementById('right-toggle-icon').textContent = '<';
+                container.classList.add('right-collapsed');
             }
         }
     },
@@ -140,6 +142,7 @@ const game = {
     togglePanel(side) {
         const panel = document.getElementById(`${side}-panel`);
         const icon = document.getElementById(`${side}-toggle-icon`);
+        const container = document.getElementById('game-container');
         
         this.panels[side] = !this.panels[side];
         localStorage.setItem(`${side}Panel`, this.panels[side]);
@@ -147,16 +150,18 @@ const game = {
         if (this.panels[side]) {
             panel.classList.remove('hidden');
             if (side === 'left') {
-                icon.textContent = '◀';
+                icon.textContent = '<';
             } else {
-                icon.textContent = '▶';
+                icon.textContent = '>';
+                container.classList.remove('right-collapsed');
             }
         } else {
             panel.classList.add('hidden');
             if (side === 'left') {
-                icon.textContent = '▶';
+                icon.textContent = '>';
             } else {
-                icon.textContent = '◀';
+                icon.textContent = '<';
+                container.classList.add('right-collapsed');
             }
         }
     },
@@ -283,7 +288,16 @@ const game = {
             this.playMusic(node.music);
         }
         
-        document.getElementById('story-content').innerHTML = `<p>${node.text}</p>`;
+        // Costruisce il contenuto con eventuale immagine
+        let content = '';
+        
+        if (node.image) {
+            content += `<img src="${node.image}" alt="Story scene" class="story-image">`;
+        }
+        
+        content += `<p>${node.text}</p>`;
+        
+        document.getElementById('story-content').innerHTML = content;
         
         const choicesContainer = document.getElementById('choices-container');
         choicesContainer.innerHTML = '';
@@ -375,7 +389,6 @@ const game = {
             
             testNameEl.textContent = `${ui.test} ${statNames[test.stat]}`;
             resultEl.textContent = '';
-            displayEl.textContent = '🎲 🎲';
             diceEl.classList.remove('hidden');
             
             // Suono dei dadi
