@@ -1,0 +1,525 @@
+{
+  "it": {
+    "title": "L'Antica Cripta",
+    "nodes": {
+      "start": {
+        "text": "Ti trovi davanti all'ingresso di un'antica cripta. Le porte di pietra sono socchiuse e un vento freddo ne esce. Cosa fai?",
+        "choices": [
+          {
+            "text": "Entra con cautela",
+            "next": "entrance",
+            "effects": { "flags": ["entered_crypt"] }
+          },
+          {
+            "text": "Cerca di forzare le porte completamente (Test Forza)",
+            "next": "force_door",
+            "test": { "stat": "strength", "difficulty": 7 }
+          },
+          {
+            "text": "Esamina l'ingresso prima di entrare (Test Intelligenza)",
+            "next": "examine",
+            "test": { "stat": "intelligence", "difficulty": 7 }
+          }
+        ]
+      },
+      "force_door": {
+        "text": "Con uno sforzo possente, spingi le porte che si aprono completamente rivelando l'interno. Tuttavia, lo sforzo ti ha stancato.",
+        "choices": [
+          {
+            "text": "Continua nell'esplorazione",
+            "next": "entrance",
+            "effects": { 
+              "health": -1,
+              "flags": ["doors_opened"]
+            }
+          }
+        ]
+      },
+      "force_door_fail": {
+        "text": "Spingi con tutte le tue forze ma le porte non cedono. Ti fai male alla spalla nel tentativo.",
+        "choices": [
+          {
+            "text": "Entra dalla fessura",
+            "next": "entrance",
+            "effects": { "health": -1 }
+          }
+        ]
+      },
+      "examine": {
+        "text": "Esaminando attentamente l'ingresso noti strani simboli incisi sulla pietra. Riconosci rune di protezione. Trovi anche una vecchia torcia ancora utilizzabile!",
+        "choices": [
+          {
+            "text": "Prendi la torcia ed entra",
+            "next": "entrance",
+            "effects": { 
+              "items": [{ "id": "torch", "name": "Torcia", "type": "permanent" }],
+              "flags": ["has_knowledge"]
+            }
+          }
+        ]
+      },
+      "examine_fail": {
+        "text": "Osservi l'ingresso ma non noti nulla di particolare. L'atmosfera inquietante ti mette a disagio.",
+        "choices": [
+          {
+            "text": "Entra comunque",
+            "next": "entrance",
+            "effects": { "sanity": -1 }
+          }
+        ]
+      },
+      "entrance": {
+        "text": "Sei nell'atrio della cripta. L'oscurità è quasi totale. A sinistra vedi un corridoio, a destra un'altra porta chiusa.",
+        "music": "src/music/crypt_ambient.mp3",
+        "choices": [
+          {
+            "text": "Vai a sinistra nel corridoio",
+            "next": "corridor",
+            "effects": { "flags": ["went_left"] }
+          },
+          {
+            "text": "Prova ad aprire la porta a destra",
+            "next": "locked_door",
+            "oneshot": true
+          },
+          {
+            "text": "Illumina l'ambiente con la torcia",
+            "next": "entrance_lit",
+            "requirements": { "items": ["torch"] },
+            "oneshot": true
+          }
+        ]
+      },
+      "entrance_lit": {
+        "text": "La luce della torcia rivela dettagli nascosti: sul pavimento noti una piccola chiave d'argento!",
+        "choices": [
+          {
+            "text": "Raccogli la chiave",
+            "next": "entrance",
+            "effects": { 
+              "items": [{ "id": "silver_key", "name": "Chiave d'Argento", "type": "permanent" }]
+            },
+            "oneshot": true
+          },
+          {
+            "text": "Lascia la chiave e prosegui",
+            "next": "entrance"
+          }
+        ]
+      },
+      "locked_door": {
+        "text": "La porta è chiusa a chiave. Sembra richiedere una chiave d'argento.",
+        "choices": [
+          {
+            "text": "Usa la chiave d'argento",
+            "next": "treasure_room",
+            "requirements": { "items": ["silver_key"] },
+            "effects": { 
+              "items": [{ "id": "silver_key", "name": "Chiave d'Argento", "type": "consume" }]
+            }
+          },
+          {
+            "text": "Torna indietro",
+            "next": "entrance"
+          }
+        ]
+      },
+      "treasure_room": {
+        "text": "La porta si apre rivelando una piccola stanza del tesoro! Trovi una pozione curativa e un'antica pergamena.",
+        "choices": [
+          {
+            "text": "Prendi tutto",
+            "next": "victory",
+            "effects": { 
+              "items": [
+                { "id": "potion", "name": "Pozione Curativa", "type": "consumable" },
+                { "id": "scroll", "name": "Pergamena Antica", "type": "permanent" }
+              ]
+            }
+          }
+        ]
+      },
+      "corridor": {
+        "text": "Il corridoio è stretto e buio. Senti rumori inquietanti provenire dalla profondità.",
+        "choices": [
+          {
+            "text": "Prosegui con coraggio",
+            "next": "deep_crypt",
+            "test": { "stat": "dexterity", "difficulty": 9 }
+          },
+          {
+            "text": "Torna all'atrio",
+            "next": "entrance"
+          }
+        ]
+      },
+      "deep_crypt": {
+        "text": "Avanzi silenziosamente evitando trappole nascoste. Raggiungi una camera sepolcrale con un antico sarcofago.",
+        "choices": [
+          {
+            "text": "Apri il sarcofago",
+            "next": "victory"
+          }
+        ]
+      },
+      "deep_crypt_fail": {
+        "text": "Fai cadere una pietra che attiva una trappola! Frecce ti colpiscono.",
+        "choices": [
+          {
+            "text": "Continua ferito",
+            "next": "deep_crypt",
+            "effects": { "health": -2 }
+          }
+        ]
+      },
+      "victory": {
+        "text": "Congratulazioni! Hai completato l'esplorazione della cripta e sei sopravvissuto. Hai scoperto antichi segreti!",
+        "choices": []
+      }
+    },
+    "items": {
+      "torch": {
+        "icon": "🔦",
+        "description": "Una vecchia torcia di legno che emette una luce fioca ma sufficiente per illuminare i luoghi bui della cripta.",
+        "image": "https://via.placeholder.com/300x200/FFA500/FFFFFF?text=Torcia",
+        "usable": false
+      },
+      "silver_key": {
+        "icon": "🔑",
+        "description": "Una piccola chiave d'argento finemente lavorata. Sembra appartenere a una serratura importante.",
+        "image": "src/images/inventories/chiavi_di_ingresso.png",
+        "usable": false
+      },
+      "potion": {
+        "icon": "🧪",
+        "description": "Una pozione di colore rosso rubino che emana un leggero calore. Può ripristinare 2 punti vita.",
+        "image": "https://via.placeholder.com/300x200/DC143C/FFFFFF?text=Pozione",
+        "usable": true,
+        "effects": { "health": 2 },
+        "useMessage": "Bevi la pozione e senti le tue ferite guarire. +2 Vita!"
+      },
+      "scroll": {
+        "icon": "📜",
+        "description": "Un'antica pergamena con rune misteriose. Contiene conoscenze dimenticate da tempo.",
+        "image": "https://via.placeholder.com/300x200/F5DEB3/8B4513?text=Pergamena",
+        "usable": false
+      }
+    },
+    "ui": {
+      "stats": "Statistiche",
+      "inventory": "Inventario",
+      "controls": "Controlli",
+      "language": "Lingua",
+      "theme": "Tema",
+      "save": "Salvataggio",
+      "strength": "Forza",
+      "dexterity": "Destrezza",
+      "intelligence": "Intelligenza",
+      "health": "Vita",
+      "sanity": "Salute Mentale",
+      "inventoryEmpty": "Inventario vuoto",
+      "capacity": "Capacità",
+      "saveGame": "Salva Partita",
+      "loadGame": "Carica Partita",
+      "newGame": "Nuova Partita",
+      "lightTheme": "Tema Chiaro",
+      "darkTheme": "Tema Scuro",
+      "charCreation": "Creazione Personaggio",
+      "charDescription": "Distribuisci 3 punti tra Forza, Destrezza e Intelligenza",
+      "pointsRemaining": "Punti rimanenti",
+      "startAdventure": "Inizia Avventura",
+      "requires": "Richiede",
+      "test": "Test",
+      "useItem": "Usa",
+      "dropItem": "Elimina",
+      "confirmDrop": "Sei sicuro di voler eliminare questo oggetto?",
+      "audio": "Audio",
+      "musicOn": "🔊 Attiva Audio",
+      "musicOff": "🔇 Disattiva Audio",
+      "volume": "Volume",
+      "menuNewGame": "Nuova Partita",
+      "menuLoadGame": "Carica Partita",
+      "menuCredits": "Crediti",
+      "credits": "Crediti",
+      "back": "Indietro",
+      "developer": "Sviluppato da",
+      "engine": "Engine",
+      "storyLabel": "Storia",
+      "year": "Anno",
+      "noSaveFound": "Nessun salvataggio trovato!",
+      "confirmRestart": "Sei sicuro di voler tornare al menu principale?",
+      "testSuccess": "Successo",
+      "testFailed": "Fallimento",
+      "needed": "Serviva"
+    },
+    "credits": {
+      "developer": "Il Tuo Nome",
+      "engine": "Librogame Engine v1.0",
+      "story": "L'Antica Cripta",
+      "year": "2025",
+      "thanks": "Grazie per aver giocato!"
+    }
+  },
+  "en": {
+    "title": "The Ancient Crypt",
+    "nodes": {
+      "start": {
+        "text": "You stand before the entrance of an ancient crypt. The stone doors are ajar and a cold wind blows out. What do you do?",
+        "choices": [
+          {
+            "text": "Enter cautiously",
+            "next": "entrance",
+            "effects": { "flags": ["entered_crypt"] }
+          },
+          {
+            "text": "Try to force the doors open completely (Strength Test)",
+            "next": "force_door",
+            "test": { "stat": "strength", "difficulty": 7 }
+          },
+          {
+            "text": "Examine the entrance before entering (Intelligence Test)",
+            "next": "examine",
+            "test": { "stat": "intelligence", "difficulty": 7 }
+          }
+        ]
+      },
+      "force_door": {
+        "text": "With a mighty effort, you push the doors fully open, revealing the interior. However, the exertion has tired you.",
+        "choices": [
+          {
+            "text": "Continue exploring",
+            "next": "entrance",
+            "effects": { 
+              "health": -1,
+              "flags": ["doors_opened"]
+            }
+          }
+        ]
+      },
+      "force_door_fail": {
+        "text": "You push with all your might but the doors won't budge. You hurt your shoulder in the attempt.",
+        "choices": [
+          {
+            "text": "Enter through the gap",
+            "next": "entrance",
+            "effects": { "health": -1 }
+          }
+        ]
+      },
+      "examine": {
+        "text": "Carefully examining the entrance, you notice strange symbols carved in the stone. You recognize protection runes. You also find an old but usable torch!",
+        "choices": [
+          {
+            "text": "Take the torch and enter",
+            "next": "entrance",
+            "effects": { 
+              "items": [{ "id": "torch", "name": "Torch", "type": "permanent" }],
+              "flags": ["has_knowledge"]
+            }
+          }
+        ]
+      },
+      "examine_fail": {
+        "text": "You observe the entrance but notice nothing particular. The eerie atmosphere makes you uneasy.",
+        "choices": [
+          {
+            "text": "Enter anyway",
+            "next": "entrance",
+            "effects": { "sanity": -1 }
+          }
+        ]
+      },
+      "entrance": {
+        "text": "You're in the crypt's atrium. The darkness is almost total. To the left you see a corridor, to the right another closed door.",
+        "music": "src/music/crypt_ambient.mp3",
+        "choices": [
+          {
+            "text": "Go left into the corridor",
+            "next": "corridor",
+            "effects": { "flags": ["went_left"] }
+          },
+          {
+            "text": "Try to open the door on the right",
+            "next": "locked_door",
+            "oneshot": true
+          },
+          {
+            "text": "Light up the area with the torch",
+            "next": "entrance_lit",
+            "requirements": { "items": ["torch"] },
+            "oneshot": true
+          }
+        ]
+      },
+      "entrance_lit": {
+        "text": "The torchlight reveals hidden details: on the floor you notice a small silver key!",
+        "choices": [
+          {
+            "text": "Pick up the key",
+            "next": "entrance",
+            "effects": { 
+              "items": [{ "id": "silver_key", "name": "Silver Key", "type": "permanent" }]
+            },
+            "oneshot": true
+          },
+          {
+            "text": "Leave the key and continue",
+            "next": "entrance"
+          }
+        ]
+      },
+      "locked_door": {
+        "text": "The door is locked. It seems to require a silver key.",
+        "choices": [
+          {
+            "text": "Use the silver key",
+            "next": "treasure_room",
+            "requirements": { "items": ["silver_key"] },
+            "effects": { 
+              "items": [{ "id": "silver_key", "name": "Silver Key", "type": "consume" }]
+            }
+          },
+          {
+            "text": "Go back",
+            "next": "entrance"
+          }
+        ]
+      },
+      "treasure_room": {
+        "text": "The door opens revealing a small treasure room! You find a healing potion and an ancient scroll.",
+        "choices": [
+          {
+            "text": "Take everything",
+            "next": "victory",
+            "effects": { 
+              "items": [
+                { "id": "potion", "name": "Healing Potion", "type": "consumable" },
+                { "id": "scroll", "name": "Ancient Scroll", "type": "permanent" }
+              ]
+            }
+          }
+        ]
+      },
+      "corridor": {
+        "text": "The corridor is narrow and dark. You hear disturbing noises coming from the depths.",
+        "choices": [
+          {
+            "text": "Continue bravely",
+            "next": "deep_crypt",
+            "test": { "stat": "dexterity", "difficulty": 9 }
+          },
+          {
+            "text": "Return to the atrium",
+            "next": "entrance"
+          }
+        ]
+      },
+      "deep_crypt": {
+        "text": "You advance silently, avoiding hidden traps. You reach a burial chamber with an ancient sarcophagus.",
+        "choices": [
+          {
+            "text": "Open the sarcophagus",
+            "next": "victory"
+          }
+        ]
+      },
+      "deep_crypt_fail": {
+        "text": "You knock over a stone that triggers a trap! Arrows hit you.",
+        "choices": [
+          {
+            "text": "Continue wounded",
+            "next": "deep_crypt",
+            "effects": { "health": -2 }
+          }
+        ]
+      },
+      "victory": {
+        "text": "Congratulations! You've completed the exploration of the crypt and survived. You've discovered ancient secrets!",
+        "choices": []
+      }
+    },
+    "items": {
+      "torch": {
+        "icon": "🔦",
+        "description": "An old wooden torch that emits a faint but sufficient light to illuminate the dark places of the crypt.",
+        "image": "https://via.placeholder.com/300x200/FFA500/FFFFFF?text=Torch",
+        "usable": false
+      },
+      "silver_key": {
+        "icon": "🔑",
+        "description": "A small, finely crafted silver key. It seems to belong to an important lock.",
+        "image": "https://via.placeholder.com/300x200/C0C0C0/000000?text=Silver+Key",
+        "usable": false
+      },
+      "potion": {
+        "icon": "🧪",
+        "description": "A ruby-red potion that emanates a slight warmth. It can restore 2 health points.",
+        "image": "https://via.placeholder.com/300x200/DC143C/FFFFFF?text=Potion",
+        "usable": true,
+        "effects": { "health": 2 },
+        "useMessage": "You drink the potion and feel your wounds heal. +2 Health!"
+      },
+      "scroll": {
+        "icon": "📜",
+        "description": "An ancient scroll with mysterious runes. It contains knowledge long forgotten.",
+        "image": "https://via.placeholder.com/300x200/F5DEB3/8B4513?text=Scroll",
+        "usable": false
+      }
+    },
+    "ui": {
+      "stats": "Statistics",
+      "inventory": "Inventory",
+      "controls": "Controls",
+      "language": "Language",
+      "theme": "Theme",
+      "save": "Save",
+      "strength": "Strength",
+      "dexterity": "Dexterity",
+      "intelligence": "Intelligence",
+      "health": "Health",
+      "sanity": "Sanity",
+      "inventoryEmpty": "Empty inventory",
+      "capacity": "Capacity",
+      "saveGame": "Save Game",
+      "loadGame": "Load Game",
+      "newGame": "New Game",
+      "lightTheme": "Light Theme",
+      "darkTheme": "Dark Theme",
+      "charCreation": "Character Creation",
+      "charDescription": "Distribute 3 points between Strength, Dexterity and Intelligence",
+      "pointsRemaining": "Points remaining",
+      "startAdventure": "Start Adventure",
+      "requires": "Requires",
+      "test": "Test",
+      "useItem": "Use",
+      "dropItem": "Drop",
+      "confirmDrop": "Are you sure you want to drop this item?",
+      "audio": "Audio",
+      "musicOn": "🔊 Enable Audio",
+      "musicOff": "🔇 Disable Audio",
+      "volume": "Volume",
+      "menuNewGame": "New Game",
+      "menuLoadGame": "Load Game",
+      "menuCredits": "Credits",
+      "credits": "Credits",
+      "back": "Back",
+      "developer": "Developed by",
+      "engine": "Engine",
+      "storyLabel": "Story",
+      "year": "Year",
+      "noSaveFound": "No save found!",
+      "confirmRestart": "Are you sure you want to return to main menu?",
+      "testSuccess": "Success",
+      "testFailed": "Failed",
+      "needed": "Needed"
+    },
+    "credits": {
+      "developer": "Your Name HERE !!!",
+   	"test":"test",
+      "engine": "Librogame Engine v1.0",
+      "story": "The Ancient Crypt",
+      "year": "2025",
+      "thanks": "Thanks for playing!"
+    }
+  }
+}

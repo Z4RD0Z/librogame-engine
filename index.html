@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Librogame Engine</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Main Menu Screen -->
+    <div id="main-menu" class="main-menu">
+        <div class="menu-container">
+            <h1 id="game-title" class="game-title">L'Antica Cripta</h1>
+            
+            <div class="menu-buttons">
+                <button class="menu-btn" onclick="game.newGame()" id="menu-new-game">
+                    <span class="menu-btn-icon">🎮</span>
+                    <span id="menu-new-text">Nuova Partita</span>
+                </button>
+                
+                <button class="menu-btn" onclick="game.loadGameFromMenu()" id="menu-load-game">
+                    <span class="menu-btn-icon">💾</span>
+                    <span id="menu-load-text">Carica Partita</span>
+                </button>
+                
+                <button class="menu-btn" onclick="game.showCredits()" id="menu-credits">
+                    <span class="menu-btn-icon">ℹ️</span>
+                    <span id="menu-credits-text">Crediti</span>
+                </button>
+            </div>
+            
+            <div class="menu-language">
+                <button class="lang-btn" onclick="game.changeLanguageMenu('it')" id="lang-it">🇮🇹 IT</button>
+                <button class="lang-btn" onclick="game.changeLanguageMenu('en')" id="lang-en">🇬🇧 EN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Credits Screen -->
+    <div id="credits-screen" class="credits-screen hidden">
+        <div class="credits-container">
+            <h2 id="credits-title">Crediti</h2>
+            <div class="credits-content" id="credits-content">
+                <p><strong>Developed by:</strong> Your Name</p>
+                <p><strong>Engine:</strong> Librogame Engine v1.0</p>
+                <p><strong>Story:</strong> L'Antica Cripta</p>
+                <p><strong>Year:</strong> 2025</p>
+                <br>
+                <p>Grazie per aver giocato!</p>
+            </div>
+            <button class="btn btn-primary" onclick="game.hideCredits()" id="credits-back">Indietro</button>
+        </div>
+    </div>
+
+    <!-- Character Creation Screen -->
+    <div id="char-creation" class="hidden">
+        <div class="char-panel">
+            <h2 id="char-title">Creazione Personaggio</h2>
+            <p id="char-description">Distribuisci 3 punti tra Forza, Destrezza e Intelligenza</p>
+            
+            <div class="points-remaining" id="points-display">Punti rimanenti: 3</div>
+            
+            <div class="char-stat">
+                <span id="str-label">Forza</span>
+                <div class="char-controls">
+                    <button onclick="game.adjustStat('strength', -1)">-</button>
+                    <span class="stat-value" id="str-value">0</span>
+                    <button onclick="game.adjustStat('strength', 1)">+</button>
+                </div>
+            </div>
+            
+            <div class="char-stat">
+                <span id="dex-label">Destrezza</span>
+                <div class="char-controls">
+                    <button onclick="game.adjustStat('dexterity', -1)">-</button>
+                    <span class="stat-value" id="dex-value">0</span>
+                    <button onclick="game.adjustStat('dexterity', 1)">+</button>
+                </div>
+            </div>
+            
+            <div class="char-stat">
+                <span id="int-label">Intelligenza</span>
+                <div class="char-controls">
+                    <button onclick="game.adjustStat('intelligence', -1)">-</button>
+                    <span class="stat-value" id="int-value">0</span>
+                    <button onclick="game.adjustStat('intelligence', 1)">+</button>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" onclick="game.startGame()" id="start-btn" style="margin-top: 20px;">Inizia Avventura</button>
+        </div>
+    </div>
+
+    <!-- Dice Roll Display -->
+    <div id="dice-roll" class="dice-roll hidden">
+        <h3 id="dice-test-name">Test di Forza</h3>
+        <div class="dice-animation" id="dice-display">🎲</div>
+        <p id="dice-result"></p>
+    </div>
+
+    <!-- Item Modal -->
+    <div id="item-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="modal-close" onclick="game.closeItemModal()">&times;</span>
+            <div class="modal-body">
+                <img id="item-image" src="" alt="Item">
+                <h3 id="item-name">Nome Oggetto</h3>
+                <p id="item-description">Descrizione oggetto</p>
+                <div id="item-actions"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Game Container -->
+    <div class="container hidden" id="game-container">
+        <!-- Left Panel: Stats & Inventory -->
+        <div class="panel left-panel" id="left-panel">
+            <button class="panel-toggle left-toggle" onclick="game.togglePanel('left')" title="Nascondi/Mostra">
+                <span id="left-toggle-icon">◀</span>
+            </button>
+            
+            <h2 id="stats-title">Statistiche</h2>
+            
+            <div class="stat-item">
+                <span class="stat-label" id="stat-str">Forza</span>
+                <span class="stat-value" id="stat-str-val">0</span>
+            </div>
+            
+            <div class="stat-item">
+                <span class="stat-label" id="stat-dex">Destrezza</span>
+                <span class="stat-value" id="stat-dex-val">0</span>
+            </div>
+            
+            <div class="stat-item">
+                <span class="stat-label" id="stat-int">Intelligenza</span>
+                <span class="stat-value" id="stat-int-val">0</span>
+            </div>
+            
+            <div class="stat-item">
+                <span class="stat-label" id="stat-health">Vita</span>
+                <span class="stat-value" id="stat-health-val">5/5</span>
+            </div>
+            <div class="stat-bar">
+                <div class="stat-bar-fill" id="health-bar" style="width: 100%"></div>
+            </div>
+            
+            <div class="stat-item">
+                <span class="stat-label" id="stat-sanity">Salute Mentale</span>
+                <span class="stat-value" id="stat-sanity-val">5/5</span>
+            </div>
+            <div class="stat-bar">
+                <div class="stat-bar-fill" id="sanity-bar" style="width: 100%"></div>
+            </div>
+            
+            <h3 id="inventory-title">Inventario</h3>
+            <div id="inventory-list">
+                <div class="inventory-empty" id="inventory-empty">Inventario vuoto</div>
+            </div>
+            <p style="margin-top: 10px; font-size: 0.9em; color: var(--text-secondary);" id="inventory-capacity">Capacità: 0/5</p>
+        </div>
+
+        <!-- Center Panel: Story -->
+        <div class="panel" id="center-panel">
+            <div id="story-content">
+                <p>Caricamento storia...</p>
+            </div>
+            <div class="choices" id="choices-container"></div>
+        </div>
+
+        <!-- Right Panel: Controls -->
+        <div class="panel right-panel" id="right-panel">
+            <button class="panel-toggle right-toggle" onclick="game.togglePanel('right')" title="Nascondi/Mostra">
+                <span id="right-toggle-icon">▶</span>
+            </button>
+            
+            <h2 id="controls-title">Controlli</h2>
+            
+            <div class="control-group">
+                <h3 id="lang-title">Lingua</h3>
+                <select id="language-select" onchange="game.changeLanguage(this.value)">
+                    <option value="it">Italiano</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <h3 id="theme-title">Tema</h3>
+                <button class="btn btn-secondary" onclick="game.toggleTheme()" id="theme-btn">Tema Scuro</button>
+            </div>
+            
+            <div class="control-group">
+                <h3 id="audio-title">Audio</h3>
+                <button class="btn btn-secondary" onclick="game.toggleMusic()" id="music-toggle">🔊 Disattiva Audio</button>
+                <div style="margin-top: 10px;">
+                    <label id="volume-label" style="display: block; margin-bottom: 5px; font-size: 0.9em; color: var(--text-secondary);">Volume: 50%</label>
+                    <input type="range" id="volume-slider" min="0" max="100" value="50" 
+                           oninput="game.setVolume(this.value / 100); game.updateUI();"
+                           style="width: 100%; cursor: pointer;">
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <h3 id="save-title">Salvataggio</h3>
+                <button class="btn btn-primary" onclick="game.saveGame()" id="save-btn">Salva Partita</button>
+                <button class="btn btn-primary" onclick="game.loadGame()" id="load-btn">Carica Partita</button>
+            </div>
+            
+            <div class="control-group">
+                <button class="btn btn-danger" onclick="game.resetGame()" id="reset-btn">Nuova Partita</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
