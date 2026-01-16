@@ -1,6 +1,28 @@
 {
   "it": {
     "title": "L'Antica Cripta",
+    "perks": [
+      {
+        "id": "strong_back",
+        "name": "Schiena Forte",
+        "description": "Puoi trasportare 3 oggetti in più"
+      },
+      {
+        "id": "night_vision",
+        "name": "Visione Notturna",
+        "description": "Vedi meglio al buio, bonus in luoghi oscuri"
+      },
+      {
+        "id": "medic",
+        "name": "Medico",
+        "description": "Le pozioni curano il doppio"
+      },
+      {
+        "id": "lockpicker",
+        "name": "Scassinatore",
+        "description": "Puoi aprire serrature senza chiavi"
+      }
+    ],
     "nodes": {
       "start": {
         "text": "Ti trovi davanti all'ingresso di un'antica cripta. Le porte di pietra sono socchiuse e un vento freddo ne esce. Cosa fai?",
@@ -179,16 +201,19 @@
     },
     "items": {
       "torch": {
+        "icon": "🔦",
         "description": "Una vecchia torcia di legno che emette una luce fioca ma sufficiente per illuminare i luoghi bui della cripta.",
         "image": "https://via.placeholder.com/300x200/FFA500/FFFFFF?text=Torcia",
         "usable": false
       },
       "silver_key": {
+        "icon": "🔑",
         "description": "Una piccola chiave d'argento finemente lavorata. Sembra appartenere a una serratura importante.",
-        "image": "src/images/inventories/chiavi_di_ingresso.png",
+        "image": "https://via.placeholder.com/300x200/C0C0C0/000000?text=Chiave+Argento",
         "usable": false
       },
       "potion": {
+        "icon": "🧪",
         "description": "Una pozione di colore rosso rubino che emana un leggero calore. Può ripristinare 2 punti vita.",
         "image": "https://via.placeholder.com/300x200/DC143C/FFFFFF?text=Pozione",
         "usable": true,
@@ -196,6 +221,7 @@
         "useMessage": "Bevi la pozione e senti le tue ferite guarire. +2 Vita!"
       },
       "scroll": {
+        "icon": "📜",
         "description": "Un'antica pergamena con rune misteriose. Contiene conoscenze dimenticate da tempo.",
         "image": "https://via.placeholder.com/300x200/F5DEB3/8B4513?text=Pergamena",
         "usable": false
@@ -230,8 +256,8 @@
       "dropItem": "Elimina",
       "confirmDrop": "Sei sicuro di voler eliminare questo oggetto?",
       "audio": "Audio",
-      "musicOn": "🔊 Attiva Audio",
-      "musicOff": "🔇 Disattiva Audio",
+      "musicOn": "Attiva Audio",
+      "musicOff": "Disattiva Audio",
       "volume": "Volume",
       "menuNewGame": "Nuova Partita",
       "menuLoadGame": "Carica Partita",
@@ -246,7 +272,11 @@
       "confirmRestart": "Sei sicuro di voler tornare al menu principale?",
       "testSuccess": "Successo",
       "testFailed": "Fallimento",
-      "needed": "Serviva"
+      "needed": "Serviva",
+      "perkPoints": "Punti vantaggi",
+      "characterName": "Nome Personaggio",
+      "perksTitle": "Vantaggi",
+      "perksDescription": "Scegli 2 vantaggi"
     },
     "credits": {
       "developer": "Il Tuo Nome",
@@ -258,9 +288,32 @@
   },
   "en": {
     "title": "The Ancient Crypt",
+    "perks": [
+      {
+        "id": "strong_back",
+        "name": "Strong Back",
+        "description": "You can carry 3 more items"
+      },
+      {
+        "id": "night_vision",
+        "name": "Night Vision",
+        "description": "You see better in the dark, bonus in dark places"
+      },
+      {
+        "id": "medic",
+        "name": "Medic",
+        "description": "Potions heal twice as much"
+      },
+      {
+        "id": "lockpicker",
+        "name": "Lockpicker",
+        "description": "You can open locks without keys"
+      }
+    ],
     "nodes": {
       "start": {
         "text": "You stand before the entrance of an ancient crypt. The stone doors are ajar and a cold wind blows out. What do you do?",
+        "image": "src/images/crypt-entrance.jpg",
         "choices": [
           {
             "text": "Enter cautiously",
@@ -436,16 +489,19 @@
     },
     "items": {
       "torch": {
+        "icon": "🔦",
         "description": "An old wooden torch that emits a faint but sufficient light to illuminate the dark places of the crypt.",
         "image": "https://via.placeholder.com/300x200/FFA500/FFFFFF?text=Torch",
         "usable": false
       },
       "silver_key": {
+        "icon": "🔑",
         "description": "A small, finely crafted silver key. It seems to belong to an important lock.",
         "image": "https://via.placeholder.com/300x200/C0C0C0/000000?text=Silver+Key",
         "usable": false
       },
       "potion": {
+        "icon": "🧪",
         "description": "A ruby-red potion that emanates a slight warmth. It can restore 2 health points.",
         "image": "https://via.placeholder.com/300x200/DC143C/FFFFFF?text=Potion",
         "usable": true,
@@ -453,6 +509,7 @@
         "useMessage": "You drink the potion and feel your wounds heal. +2 Health!"
       },
       "scroll": {
+        "icon": "📜",
         "description": "An ancient scroll with mysterious runes. It contains knowledge long forgotten.",
         "image": "https://via.placeholder.com/300x200/F5DEB3/8B4513?text=Scroll",
         "usable": false
@@ -487,8 +544,8 @@
       "dropItem": "Drop",
       "confirmDrop": "Are you sure you want to drop this item?",
       "audio": "Audio",
-      "musicOn": "🔊 Enable Audio",
-      "musicOff": "🔇 Disable Audio",
+      "musicOn": "Enable Audio",
+      "musicOff": "Disable Audio",
       "volume": "Volume",
       "menuNewGame": "New Game",
       "menuLoadGame": "Load Game",
@@ -503,11 +560,14 @@
       "confirmRestart": "Are you sure you want to return to main menu?",
       "testSuccess": "Success",
       "testFailed": "Failed",
-      "needed": "Needed"
+      "needed": "Needed",
+      "perkPoints": "Perk points",
+      "characterName": "Character Name",
+      "perksTitle": "Perks",
+      "perksDescription": "Choose 2 perks"
     },
     "credits": {
-      "developer": "Your Name HERE !!!",
-   	"test":"test",
+      "developer": "Your Name",
       "engine": "Librogame Engine v1.0",
       "story": "The Ancient Crypt",
       "year": "2025",

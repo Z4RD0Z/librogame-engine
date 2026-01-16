@@ -14,24 +14,21 @@
             
             <div class="menu-buttons">
                 <button class="menu-btn" onclick="game.newGame()" id="menu-new-game">
-                    <span class="menu-btn-icon"></span>
                     <span id="menu-new-text">Nuova Partita</span>
                 </button>
                 
                 <button class="menu-btn" onclick="game.loadGameFromMenu()" id="menu-load-game">
-                    <span class="menu-btn-icon"></span>
                     <span id="menu-load-text">Carica Partita</span>
                 </button>
                 
                 <button class="menu-btn" onclick="game.showCredits()" id="menu-credits">
-                    <span class="menu-btn-icon">ℹ️</span>
                     <span id="menu-credits-text">Crediti</span>
                 </button>
             </div>
             
             <div class="menu-language">
-                <button class="lang-btn" onclick="game.changeLanguageMenu('it')" id="lang-it">🇮🇹 IT</button>
-                <button class="lang-btn" onclick="game.changeLanguageMenu('en')" id="lang-en">🇬🇧 EN</button>
+                <button class="lang-btn" onclick="game.changeLanguageMenu('it')" id="lang-it">IT</button>
+                <button class="lang-btn" onclick="game.changeLanguageMenu('en')" id="lang-en">EN</button>
             </div>
         </div>
     </div>
@@ -56,6 +53,12 @@
     <div id="char-creation" class="hidden">
         <div class="char-panel">
             <h2 id="char-title">Creazione Personaggio</h2>
+            
+            <div style="margin-bottom: 20px;">
+                <label for="char-name-input" id="char-name-label" style="display: block; margin-bottom: 5px; font-weight: bold;">Nome Personaggio</label>
+                <input type="text" id="char-name-input" placeholder="Inserisci il nome..." style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 6px; font-size: 1em;">
+            </div>
+            
             <p id="char-description">Distribuisci 3 punti tra Forza, Destrezza e Intelligenza</p>
             
             <div class="points-remaining" id="points-display">Punti rimanenti: 3</div>
@@ -87,6 +90,11 @@
                 </div>
             </div>
             
+            <h3 id="perks-title" style="margin-top: 25px; text-align: center;">Vantaggi</h3>
+            <p id="perks-description" style="text-align: center; font-size: 0.9em; margin-bottom: 10px;">Scegli 1 vantaggio</p>
+            <div class="points-remaining" id="perk-points-display">Punti vantaggi: 1</div>
+            <div id="perks-list" style="max-height: 200px; overflow-y: auto; margin: 15px 0;"></div>
+            
             <button class="btn btn-primary" onclick="game.startGame()" id="start-btn" style="margin-top: 20px;">Inizia Avventura</button>
         </div>
     </div>
@@ -116,7 +124,7 @@
         <!-- Left Panel: Stats & Inventory -->
         <div class="panel left-panel" id="left-panel">
             <button class="panel-toggle left-toggle" onclick="game.togglePanel('left')" title="Nascondi/Mostra">
-                <span id="left-toggle-icon">◀</span>
+                <span id="left-toggle-icon">&lt;</span>
             </button>
             
             <h2 id="stats-title">Statistiche</h2>
@@ -170,7 +178,7 @@
         <!-- Right Panel: Controls -->
         <div class="panel right-panel" id="right-panel">
             <button class="panel-toggle right-toggle" onclick="game.togglePanel('right')" title="Nascondi/Mostra">
-                <span id="right-toggle-icon">▶</span>
+                <span id="right-toggle-icon">&gt;</span>
             </button>
             
             <h2 id="controls-title">Controlli</h2>

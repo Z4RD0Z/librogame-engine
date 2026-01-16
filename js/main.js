@@ -25,11 +25,14 @@ const game = {
             maxHealth: 5,
             sanity: 5,
             maxSanity: 5,
+            
         },
+        perks:[],
         inventory: [],
         flags: [],
         usedChoices: [],
-        pointsToSpend: 3
+        pointsToSpend: 3,
+        perkPointsToSpend: 1
     },
 
     async init() {
@@ -119,7 +122,6 @@ const game = {
     loadPanelStates() {
         const leftState = localStorage.getItem('leftPanel');
         const rightState = localStorage.getItem('rightPanel');
-        const container = document.getElementById('game-container');
         
         if (leftState !== null) {
             this.panels.left = leftState === 'true';
@@ -134,35 +136,40 @@ const game = {
             if (!this.panels.right) {
                 document.getElementById('right-panel').classList.add('hidden');
                 document.getElementById('right-toggle-icon').textContent = '<';
-                container.classList.add('right-collapsed');
             }
         }
+        
+        setTimeout(() => this.updateContainerLayout(), 100);
     },
 
     togglePanel(side) {
         const panel = document.getElementById(`${side}-panel`);
         const icon = document.getElementById(`${side}-toggle-icon`);
-        const container = document.getElementById('game-container');
         
         this.panels[side] = !this.panels[side];
         localStorage.setItem(`${side}Panel`, this.panels[side]);
         
         if (this.panels[side]) {
             panel.classList.remove('hidden');
-            if (side === 'left') {
-                icon.textContent = '<';
-            } else {
-                icon.textContent = '>';
-                container.classList.remove('right-collapsed');
-            }
+            icon.textContent = side === 'left' ? '<' : '>';
         } else {
             panel.classList.add('hidden');
-            if (side === 'left') {
-                icon.textContent = '>';
-            } else {
-                icon.textContent = '<';
-                container.classList.add('right-collapsed');
-            }
+            icon.textContent = side === 'left' ? '>' : '<';
+        }
+        
+        this.updateContainerLayout();
+    },
+
+    updateContainerLayout() {
+        const container = document.getElementById('game-container');
+        container.classList.remove('left-collapsed', 'right-collapsed', 'both-collapsed');
+        
+        if (!this.panels.left && !this.panels.right) {
+            container.classList.add('both-collapsed');
+        } else if (!this.panels.left) {
+            container.classList.add('left-collapsed');
+        } else if (!this.panels.right) {
+            container.classList.add('right-collapsed');
         }
     },
 
@@ -245,6 +252,43 @@ const game = {
 
     showCharCreation() {
         document.getElementById('char-creation').classList.remove('hidden');
+        this.loadPerks();
+        this.updateCharCreation();
+    },
+
+    loadPerks() {
+        const perksData = this.storyData[this.currentLang].perks || [];
+        const perksList = document.getElementById('perks-list');
+        
+        perksList.innerHTML = perksData.map(perk => `
+            <div class="perk-item" data-perk-id="${perk.id}">
+                <input type="checkbox" id="perk-${perk.id}" onchange="game.togglePerk('${perk.id}')">
+                <label for="perk-${perk.id}">
+                    <strong>${perk.name}</strong>
+                    <p style="font-size: 0.85em; color: var(--text-secondary); margin: 2px 0 0 0;">${perk.description}</p>
+                </label>
+            </div>
+        `).join('');
+    },
+
+    togglePerk(perkId) {
+        const checkbox = document.getElementById(`perk-${perkId}`);
+        
+        if (checkbox.checked) {
+            if (this.state.perkPointsToSpend > 0) {
+                this.state.perks.push(perkId);
+                this.state.perkPointsToSpend--;
+            } else {
+                checkbox.checked = false;
+            }
+        } else {
+            const index = this.state.perks.indexOf(perkId);
+            if (index > -1) {
+                this.state.perks.splice(index, 1);
+                this.state.perkPointsToSpend++;
+            }
+        }
+        
         this.updateCharCreation();
     },
 
@@ -265,15 +309,19 @@ const game = {
         const ui = this.storyData[this.currentLang].ui;
         document.getElementById('points-display').textContent = 
             `${ui.pointsRemaining}: ${this.state.pointsToSpend}`;
+        document.getElementById('perk-points-display').textContent = 
+            `${ui.perkPoints || 'Punti vantaggi'}: ${this.state.perkPointsToSpend}`;
         document.getElementById('str-value').textContent = this.state.stats.strength;
         document.getElementById('dex-value').textContent = this.state.stats.dexterity;
         document.getElementById('int-value').textContent = this.state.stats.intelligence;
         
         const startBtn = document.getElementById('start-btn');
-        startBtn.disabled = this.state.pointsToSpend !== 0;
+        const nameInput = document.getElementById('char-name-input');
+        startBtn.disabled = this.state.pointsToSpend !== 0 || this.state.perkPointsToSpend !== 0 || !nameInput.value.trim();
     },
 
     startGame() {
+        this.state.characterName = document.getElementById('char-name-input').value.trim();
         document.getElementById('char-creation').classList.add('hidden');
         this.updateUI();
         this.displayNode(this.currentNode);
@@ -343,6 +391,16 @@ const game = {
                 for (let flag of choice.requirements.flags) {
                     if (!this.state.flags.includes(flag)) {
                         return { allowed: false, reason: `${ui.requires}: ${flag}` };
+                    }
+                }
+            }
+            
+            if (choice.requirements.perks) {
+                for (let perkId of choice.requirements.perks) {
+                    if (!this.state.perks.includes(perkId)) {
+                        const perkData = this.storyData[this.currentLang].perks.find(p => p.id === perkId);
+                        const perkName = perkData ? perkData.name : perkId;
+                        return { allowed: false, reason: `${ui.requires}: ${perkName}` };
                     }
                 }
             }
@@ -539,8 +597,8 @@ const game = {
         const musicBtn = document.getElementById('music-toggle');
         if (musicBtn) {
             musicBtn.textContent = this.audio.musicEnabled ? 
-                (ui.musicOff || '🔇 Disattiva Audio') : 
-                (ui.musicOn || '🔊 Attiva Audio');
+                (ui.musicOff || 'Disattiva Audio') : 
+                (ui.musicOn || 'Attiva Audio');
         }
         
         const volumeSlider = document.getElementById('volume-slider');
@@ -683,7 +741,8 @@ const game = {
                 inventory: [],
                 flags: [],
                 usedChoices: [],
-                pointsToSpend: 3
+                pointsToSpend: 3,
+                perksPointsToSpend:2 
             };
             this.currentNode = 'start';
             
