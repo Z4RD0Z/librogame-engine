@@ -485,6 +485,31 @@ select {
     cursor: pointer;
 }
 
+/* Colored text spans */
+.text-red { color: #e74c3c; }
+.text-blue { color: #3498db; }
+.text-green { color: #27ae60; }
+.text-yellow { color: #f39c12; }
+.text-purple { color: #9b59b6; }
+.text-orange { color: #e67e22; }
+.text-gray { color: #95a5a6; }
+.text-cyan { color: #1abc9c; }
+.text-pink { color: #e91e63; }
+
+/* Character dialogue styles */
+.dialogue {
+    padding: 8px 12px;
+    margin: 10px 0;
+    border-left: 4px solid currentColor;
+    background: rgba(0,0,0,0.05);
+    border-radius: 4px;
+    font-style: italic;
+}
+
+[data-theme="dark"] .dialogue {
+    background: rgba(255,255,255,0.05);
+}
+
 /* Volume Slider */
 input[type="range"] {
     -webkit-appearance: none;

@@ -328,51 +328,66 @@ const game = {
     },
 
     displayNode(nodeId) {
-        this.currentNode = nodeId;
-        const node = this.storyData[this.currentLang].nodes[nodeId];
-        
-        // Riproduce la musica se specificata nel nodo
-        if (node.music) {
-            this.playMusic(node.music);
+    this.currentNode = nodeId;
+    const node = this.storyData[this.currentLang].nodes[nodeId];
+    
+    // Riproduce la musica se specificata nel nodo
+    if (node.music) {
+        this.playMusic(node.music);
+    }
+    
+    // Costruisce il contenuto con eventuale immagine
+    let content = '';
+    
+    if (node.image) {
+        content += `<img src="${node.image}" alt="Story scene" class="story-image">`;
+    }
+    
+    // Processa il testo per i colori
+    const processedText = this.processColoredText(node.text);
+    content += `<p>${processedText}</p>`;
+    
+    document.getElementById('story-content').innerHTML = content;
+    
+    const choicesContainer = document.getElementById('choices-container');
+    choicesContainer.innerHTML = '';
+    
+    node.choices.forEach((choice, index) => {
+        if (choice.oneshot && this.state.usedChoices.includes(`${nodeId}_${index}`)) {
+            return;
         }
         
-        // Costruisce il contenuto con eventuale immagine
-        let content = '';
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.textContent = choice.text;
         
-        if (node.image) {
-            content += `<img src="${node.image}" alt="Story scene" class="story-image">`;
+        const canUse = this.checkRequirements(choice);
+        btn.disabled = !canUse.allowed;
+        
+        if (!canUse.allowed && canUse.reason) {
+            const req = document.createElement('div');
+            req.className = 'choice-requirements';
+            req.textContent = canUse.reason;
+            btn.appendChild(req);
         }
         
-        content += `<p>${node.text}</p>`;
-        
-        document.getElementById('story-content').innerHTML = content;
-        
-        const choicesContainer = document.getElementById('choices-container');
-        choicesContainer.innerHTML = '';
-        
-        node.choices.forEach((choice, index) => {
-            if (choice.oneshot && this.state.usedChoices.includes(`${nodeId}_${index}`)) {
-                return;
-            }
-            
-            const btn = document.createElement('button');
-            btn.className = 'choice-btn';
-            btn.textContent = choice.text;
-            
-            const canUse = this.checkRequirements(choice);
-            btn.disabled = !canUse.allowed;
-            
-            if (!canUse.allowed && canUse.reason) {
-                const req = document.createElement('div');
-                req.className = 'choice-requirements';
-                req.textContent = canUse.reason;
-                btn.appendChild(req);
-            }
-            
-            btn.onclick = () => this.makeChoice(choice, nodeId, index);
-            choicesContainer.appendChild(btn);
-        });
-    },
+        btn.onclick = () => this.makeChoice(choice, nodeId, index);
+        choicesContainer.appendChild(btn);
+    	});
+	},
+
+	processColoredText(text) {
+    
+    text = text.replace(/\[(\w+):(.*?)\]/g, (match, color, content) => {
+        return `<span class="text-${color}">${content}</span>`;
+    });
+    
+    text = text.replace(/\{(\w+):(.*?)\}/g, (match, color, content) => {
+        return `<div class="dialogue text-${color}">${content}</div>`;
+    });
+    
+    return text;
+},
 
     checkRequirements(choice) {
         const ui = this.storyData[this.currentLang].ui;
