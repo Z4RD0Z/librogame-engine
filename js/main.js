@@ -755,9 +755,10 @@ const game = {
                 },
                 inventory: [],
                 flags: [],
+                perks:[],
                 usedChoices: [],
                 pointsToSpend: 3,
-                perksPointsToSpend:2 
+                perkPointsToSpend:1 
             };
             this.currentNode = 'start';
             
