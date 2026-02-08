@@ -118,7 +118,10 @@
             </div>
         </div>
     </div>
-
+ 	
+ 	<!-- Mobile Backdrop -->
+    <div class="mobile-backdrop" id="mobile-backdrop" onclick="game.closeMobilePanels()"></div>
+    
     <!-- Main Game Container -->
     <div class="container hidden" id="game-container">
         <!-- Left Panel: Stats & Inventory -->
@@ -218,6 +221,25 @@
             </div>
         </div>
     </div>
+    
+    <!-- Mobile Bottom Navigation -->
+    <div class="mobile-nav" id="mobile-nav">
+        <button class="mobile-nav-btn" onclick="game.showMobilePanel('stats')" id="mobile-nav-stats">
+            <span class="mobile-nav-icon">📊</span>
+            <span class="mobile-nav-label" id="mobile-nav-stats-label">Stats</span>
+        </button>
+        <button class="mobile-nav-btn active" onclick="game.showMobilePanel('story')" id="mobile-nav-story">
+            <span class="mobile-nav-icon">📖</span>
+            <span class="mobile-nav-label" id="mobile-nav-story-label">Storia</span>
+        </button>
+        <button class="mobile-nav-btn" onclick="game.showMobilePanel('controls')" id="mobile-nav-controls">
+            <span class="mobile-nav-icon">⚙️</span>
+            <span class="mobile-nav-label" id="mobile-nav-controls-label">Menu</span>
+        </button>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
 
     <script src="js/main.js"></script>
 </body>

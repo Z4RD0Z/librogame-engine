@@ -25,7 +25,7 @@
     ],
     "nodes": {
       "start": {
-        "text": "Ti trovi [red:davanti all'ingresso di un'antica cripta].{red:Alt! Chi va là?}, Le porte di pietra sono socchiuse e un vento freddo ne esce. Cosa fai?",
+        "text": "Ti trovi [red:davanti all'ingresso di un'antica cripta].Senti tuonare nel vuoto:{red:Alt! Chi va là?} .Le porte di pietra sono socchiuse e un vento freddo ne esce. Cosa fai?",
         "choices": [
           {
             "text": "Entra con cautela",
@@ -276,7 +276,10 @@
       "perkPoints": "Punti vantaggi",
       "characterName": "Nome Personaggio",
       "perksTitle": "Vantaggi",
-      "perksDescription": "Scegli 2 vantaggi"
+      "perksDescription": "Scegli 2 vantaggi",
+      "mobileNavStats": "Stats",
+"mobileNavStory": "Storia", 
+"mobileNavControls": "Menu"
     },
     "credits": {
       "developer": "Il Tuo Nome",
@@ -564,7 +567,10 @@
       "perkPoints": "Perk points",
       "characterName": "Character Name",
       "perksTitle": "Perks",
-      "perksDescription": "Choose 2 perks"
+      "perksDescription": "Choose 2 perks",
+      "mobileNavStats": "Stats",
+"mobileNavStory": "Story",
+"mobileNavControls": "Menu"
     },
     "credits": {
       "developer": "Your Name",
