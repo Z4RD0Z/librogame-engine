@@ -28,11 +28,13 @@
 }
 
 body {
-    font-family: 'Georgia', serif;
+    font-family: "Georgia", serif;
     background: var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.6;
-    transition: background 0.3s, color 0.3s;
+    transition:
+        background 0.3s,
+        color 0.3s;
     overflow-x: hidden;
 }
 
@@ -43,7 +45,7 @@ body {
     left: 0;
     width: 100%;
     height: 100vh;
-    background-image: url('src/images/menu-background.jpg');
+    background-image: url("src/images/menu-background.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -54,13 +56,17 @@ body {
 }
 
 .main-menu::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.8) 100%);
+    background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.7) 0%,
+        rgba(0, 0, 0, 0.8) 100%
+    );
     z-index: -1;
 }
 
@@ -277,7 +283,6 @@ body {
     transform: translateX(100%);
 }
 
-/* Solo su DESKTOP usa i vw per le frecce visibili */
 @media (min-width: 1025px) {
     .left-panel.hidden {
         right: 1vw;
@@ -824,7 +829,6 @@ input[type="range"]::-moz-range-thumb:hover {
 @media (max-width: 1024px) {
     body {
         padding-bottom: 70px;
-        /* Spazio per bottom nav */
     }
 
     .container {
@@ -833,7 +837,6 @@ input[type="range"]::-moz-range-thumb:hover {
         padding-bottom: 80px;
     }
 
-    /* Nascondi pannelli laterali su mobile */
     .left-panel,
     .right-panel {
         display: none;
@@ -850,21 +853,18 @@ input[type="range"]::-moz-range-thumb:hover {
         animation: slideUp 0.3s ease-out;
     }
 
-    /* Quando visibili, mostra con animazione */
     .left-panel.mobile-visible,
     .right-panel.mobile-visible {
         display: block;
     }
 
-    /* Nascondi i toggle desktop */
     .panel-toggle {
         display: none;
     }
 
-    /* Pulsante chiudi in alto a destra nei pannelli */
     .left-panel::before,
     .right-panel::before {
-        content: '✕';
+        content: "✕";
         position: fixed;
         top: 15px;
         right: 20px;
@@ -944,12 +944,10 @@ input[type="range"]::-moz-range-thumb:hover {
         display: block;
     }
 
-    /* Pannello centrale sempre visibile */
     #center-panel {
         display: block !important;
     }
 
-    /* Rimuovi classi collapsed su mobile */
     .container.left-collapsed,
     .container.right-collapsed,
     .container.both-collapsed {
@@ -957,7 +955,7 @@ input[type="range"]::-moz-range-thumb:hover {
     }
 }
 
-/* Animazione slide up */
+/* slide up */
 @keyframes slideUp {
     from {
         transform: translateY(100%);
