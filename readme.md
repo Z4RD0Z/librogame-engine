@@ -73,6 +73,7 @@ librogame-engine/
 ## 🚀 Quick Start
 
 1. **Clone the repository**
+    - You can choice to clone the repo Or click on "Use this template" to create your own repository with the engine:
 ```bash
 git clone https://github.com/Z4RD0Z/librogame-engine.git
 cd librogame-engine
