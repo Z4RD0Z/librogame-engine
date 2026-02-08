@@ -1,195 +1,204 @@
 const game = {
-  currentLang: "it",
-  currentNode: "start",
-  theme: "light",
-  storyData: null,
+    currentLang: "it",
+    currentNode: "start",
+    theme: "light",
+    storyData: null,
 
-  audio: {
-    music: null,
-    dice: null,
-    musicEnabled: true,
-    volume: 0.5,
-  },
-
-  panels: {
-    left: true,
-    right: true,
-  },
-
-  state: {
-    stats: {
-      strength: 0,
-      dexterity: 0,
-      intelligence: 0,
-      health: 5,
-      maxHealth: 5,
-      sanity: 5,
-      maxSanity: 5,
+    audio: {
+        music: null,
+        dice: null,
+        musicEnabled: true,
+        volume: 0.5,
     },
-    perks: [],
-    inventory: [],
-    flags: [],
-    usedChoices: [],
-    pointsToSpend: 3,
-    perkPointsToSpend: 1,
-  },
 
-  async init() {
-    this.loadTheme();
-    this.initAudio();
-    this.loadPanelStates();
-    await this.loadStoryData();
-    this.updateMainMenu();
-  },
+    panels: {
+        left: true,
+        right: true,
+    },
 
-  isMobile() {
-    return window.innerWidth <= 1024;
-  },
+    state: {
+        stats: {
+            strength: 0,
+            dexterity: 0,
+            intelligence: 0,
+            health: 5,
+            maxHealth: 5,
+            sanity: 5,
+            maxSanity: 5,
+        },
+        perks: [],
+        inventory: [],
+        flags: [],
+        usedChoices: [],
+        pointsToSpend: 3,
+        perkPointsToSpend: 1,
+    },
 
-  showMobilePanel(panel) {
-    if (!this.isMobile()) return;
+    async init() {
+        this.loadTheme();
+        this.initAudio();
+        this.loadPanelStates();
+        await this.loadStoryData();
+        this.updateMainMenu();
+    },
 
-    const backdrop = document.getElementById("mobile-backdrop");
-    const leftPanel = document.getElementById("left-panel");
-    const rightPanel = document.getElementById("right-panel");
+    isMobile() {
+        return window.innerWidth <= 1024;
+    },
 
-    // Rimuovi active da tutti i bottoni
-    document
-      .querySelectorAll(".mobile-nav-btn")
-      .forEach((btn) => btn.classList.remove("active"));
+    showMobilePanel(panel) {
+        if (!this.isMobile()) return;
 
-    if (panel === "stats") {
-      leftPanel.classList.add("mobile-visible");
-      backdrop.classList.add("active");
-      document.getElementById("mobile-nav-stats").classList.add("active");
-    } else if (panel === "controls") {
-      rightPanel.classList.add("mobile-visible");
-      backdrop.classList.add("active");
-      document.getElementById("mobile-nav-controls").classList.add("active");
-    } else if (panel === "story") {
-      // Storia sempre visibile, chiudi eventuali pannelli aperti
-      leftPanel.classList.remove("mobile-visible");
-      rightPanel.classList.remove("mobile-visible");
-      backdrop.classList.remove("active");
-      document.getElementById("mobile-nav-story").classList.add("active");
-    }
-  },
+        const backdrop = document.getElementById("mobile-backdrop");
+        const leftPanel = document.getElementById("left-panel");
+        const rightPanel = document.getElementById("right-panel");
 
-  closeMobilePanels() {
-    if (!this.isMobile()) return;
+        leftPanel.classList.remove("hidden");
+        rightPanel.classList.remove("hidden");
+        leftPanel.classList.remove("mobile-visible");
+        rightPanel.classList.remove("mobile-visible");
 
-    const backdrop = document.getElementById("mobile-backdrop");
-    const leftPanel = document.getElementById("left-panel");
-    const rightPanel = document.getElementById("right-panel");
+        // Rimuovi active da tutti i bottoni
+        document
+            .querySelectorAll(".mobile-nav-btn")
+            .forEach((btn) => btn.classList.remove("active"));
 
-    leftPanel.classList.remove("mobile-visible");
-    rightPanel.classList.remove("mobile-visible");
-    backdrop.classList.remove("active");
+        if (panel === "stats") {
+            leftPanel.classList.add("mobile-visible");
+            backdrop.classList.add("active");
+            document.getElementById("mobile-nav-stats").classList.add("active");
+        } else if (panel === "controls") {
+            rightPanel.classList.add("mobile-visible");
+            backdrop.classList.add("active");
+            document.getElementById("mobile-nav-controls").classList.add("active");
+        } else if (panel === "story") {
+            // Storia sempre visibile, chiudi eventuali pannelli aperti
+            leftPanel.classList.remove("mobile-visible");
+            rightPanel.classList.remove("mobile-visible");
+            leftPanel.classList.add("hidden");
+            rightPanel.classList.add("hidden");
+            backdrop.classList.remove("active");
+            document.getElementById("mobile-nav-story").classList.add("active");
+        }
+    },
 
-    // Riattiva storia
-    document
-      .querySelectorAll(".mobile-nav-btn")
-      .forEach((btn) => btn.classList.remove("active"));
-    document.getElementById("mobile-nav-story").classList.add("active");
-  },
+    closeMobilePanels() {
+        if (!this.isMobile()) return;
 
-  updateMainMenu() {
-    const data = this.storyData[this.currentLang];
-    document.getElementById("game-title").textContent = data.title;
-    document.getElementById("menu-new-text").textContent =
-      data.ui.menuNewGame || "Nuova Partita";
-    document.getElementById("menu-load-text").textContent =
-      data.ui.menuLoadGame || "Carica Partita";
-    document.getElementById("menu-credits-text").textContent =
-      data.ui.menuCredits || "Crediti";
+        const backdrop = document.getElementById("mobile-backdrop");
+        const leftPanel = document.getElementById("left-panel");
+        const rightPanel = document.getElementById("right-panel");
 
-    // Evidenzia lingua attiva
-    document
-      .querySelectorAll(".lang-btn")
-      .forEach((btn) => btn.classList.remove("active"));
-    document.getElementById(`lang-${this.currentLang}`).classList.add("active");
-  },
+        leftPanel.classList.remove("mobile-visible");
+        rightPanel.classList.remove("mobile-visible");
+        leftPanel.classList.add("hidden");
+        rightPanel.classList.add("hidden");
+        backdrop.classList.remove("active");
 
-  changeLanguageMenu(lang) {
-    this.currentLang = lang;
-    this.updateMainMenu();
-    this.updateCreditsScreen();
-  },
+        // Riattiva storia
+        document
+            .querySelectorAll(".mobile-nav-btn")
+            .forEach((btn) => btn.classList.remove("active"));
+        document.getElementById("mobile-nav-story").classList.add("active");
+    },
 
-  newGame() {
-    document.getElementById("main-menu").classList.add("hidden");
-    document.getElementById("game-container").classList.remove("hidden");
+    updateMainMenu() {
+        const data = this.storyData[this.currentLang];
+        document.getElementById("game-title").textContent = data.title;
+        document.getElementById("menu-new-text").textContent =
+            data.ui.menuNewGame || "Nuova Partita";
+        document.getElementById("menu-load-text").textContent =
+            data.ui.menuLoadGame || "Carica Partita";
+        document.getElementById("menu-credits-text").textContent =
+            data.ui.menuCredits || "Crediti";
 
-    // Su mobile, forza chiusura pannelli
-    if (this.isMobile()) {
-      this.panels.left = false;
-      this.panels.right = false;
-      document.getElementById("left-panel").classList.add("hidden");
-      document.getElementById("right-panel").classList.add("hidden");
-      document.getElementById("left-toggle-icon").textContent = ">";
-      document.getElementById("right-toggle-icon").textContent = "<";
-    }
+        // Evidenzia lingua attiva
+        document
+            .querySelectorAll(".lang-btn")
+            .forEach((btn) => btn.classList.remove("active"));
+        document.getElementById(`lang-${this.currentLang}`).classList.add("active");
+    },
 
-    this.showCharCreation();
-  },
+    changeLanguageMenu(lang) {
+        this.currentLang = lang;
+        this.updateMainMenu();
+        this.updateCreditsScreen();
+    },
 
-  loadGameFromMenu() {
-    const saved = localStorage.getItem("gameSave");
-    if (saved) {
-      const data = JSON.parse(saved);
-      this.state = data.state;
-      this.currentNode = data.currentNode;
-      this.currentLang = data.currentLang;
-      document.getElementById("language-select").value = this.currentLang;
+    newGame() {
+        document.getElementById("main-menu").classList.add("hidden");
+        document.getElementById("game-container").classList.remove("hidden");
 
-      document.getElementById("main-menu").classList.add("hidden");
-      document.getElementById("game-container").classList.remove("hidden");
-      document.getElementById("char-creation").classList.add("hidden");
+        // Su mobile, forza chiusura pannelli
+        if (this.isMobile()) {
+            this.panels.left = false;
+            this.panels.right = false;
+            document.getElementById("left-panel").classList.add("hidden");
+            document.getElementById("right-panel").classList.add("hidden");
+            document.getElementById("left-toggle-icon").textContent = ">";
+            document.getElementById("right-toggle-icon").textContent = "<";
+        }
 
-      // Su mobile, forza chiusura pannelli
-      if (this.isMobile()) {
-        this.panels.left = false;
-        this.panels.right = false;
-        document.getElementById("left-panel").classList.add("hidden");
-        document.getElementById("right-panel").classList.add("hidden");
-        document.getElementById("left-toggle-icon").textContent = ">";
-        document.getElementById("right-toggle-icon").textContent = "<";
-      }
+        this.showCharCreation();
+    },
 
-      this.updateUI();
-      this.displayNode(this.currentNode);
-    } else {
-      alert(
-        this.storyData[this.currentLang].ui.noSaveFound ||
-          "Nessun salvataggio trovato / No save found",
-      );
-    }
-  },
+    loadGameFromMenu() {
+        const saved = localStorage.getItem("gameSave");
+        if (saved) {
+            const data = JSON.parse(saved);
+            this.state = data.state;
+            this.currentNode = data.currentNode;
+            this.currentLang = data.currentLang;
+            document.getElementById("language-select").value = this.currentLang;
 
-  showCredits() {
-    document.getElementById("credits-screen").classList.remove("hidden");
-    this.updateCreditsScreen();
-  },
+            document.getElementById("main-menu").classList.add("hidden");
+            document.getElementById("game-container").classList.remove("hidden");
+            document.getElementById("char-creation").classList.add("hidden");
 
-  hideCredits() {
-    document.getElementById("credits-screen").classList.add("hidden");
-  },
+            // Su mobile, forza chiusura pannelli
+            if (this.isMobile()) {
+                this.panels.left = false;
+                this.panels.right = false;
+                document.getElementById("left-panel").classList.add("hidden");
+                document.getElementById("right-panel").classList.add("hidden");
+                document.getElementById("left-toggle-icon").textContent = ">";
+                document.getElementById("right-toggle-icon").textContent = "<";
+            }
 
-  updateCreditsScreen() {
-    const ui = this.storyData[this.currentLang].ui;
-    document.getElementById("credits-title").textContent =
-      ui.credits || "Crediti";
-    document.getElementById("credits-back").textContent = ui.back || "Indietro";
+            this.updateUI();
+            this.displayNode(this.currentNode);
+        } else {
+            alert(
+                this.storyData[this.currentLang].ui.noSaveFound ||
+                "Nessun salvataggio trovato / No save found",
+            );
+        }
+    },
 
-    const content = this.storyData[this.currentLang].credits || {
-      developer: "Your Name",
-      engine: "Librogame Engine v1.0",
-      story: this.storyData[this.currentLang].title,
-      year: "2025",
-      thanks: "Grazie per aver giocato!",
-    };
+    showCredits() {
+        document.getElementById("credits-screen").classList.remove("hidden");
+        this.updateCreditsScreen();
+    },
 
-    document.getElementById("credits-content").innerHTML = `
+    hideCredits() {
+        document.getElementById("credits-screen").classList.add("hidden");
+    },
+
+    updateCreditsScreen() {
+        const ui = this.storyData[this.currentLang].ui;
+        document.getElementById("credits-title").textContent =
+            ui.credits || "Crediti";
+        document.getElementById("credits-back").textContent = ui.back || "Indietro";
+
+        const content = this.storyData[this.currentLang].credits || {
+            developer: "Your Name",
+            engine: "Librogame Engine v1.0",
+            story: this.storyData[this.currentLang].title,
+            year: "2025",
+            thanks: "Grazie per aver giocato!",
+        };
+
+        document.getElementById("credits-content").innerHTML = `
             <p><strong>${ui.developer || "Developed by"}:</strong> ${content.developer}</p>
             <p><strong>${ui.engine || "Engine"}:</strong> ${content.engine}</p>
             <p><strong>${ui.storyLabel || "Story"}:</strong> ${content.story}</p>
@@ -197,191 +206,191 @@ const game = {
             <br>
             <p>${content.thanks}</loadPanel>
         `;
-  },
+    },
 
-  loadPanelStates() {
-    const leftState = localStorage.getItem("leftPanel");
-    const rightState = localStorage.getItem("rightPanel");
+    loadPanelStates() {
+        const leftState = localStorage.getItem("leftPanel");
+        const rightState = localStorage.getItem("rightPanel");
 
-    if (leftState !== null) {
-      this.panels.left = leftState === "true";
-      if (!this.panels.left) {
-        document.getElementById("left-panel").classList.add("hidden");
-        document.getElementById("left-toggle-icon").textContent = ">";
-      }
-    }
-
-    if (rightState !== null) {
-      this.panels.right = rightState === "true";
-      if (!this.panels.right) {
-        document.getElementById("right-panel").classList.add("hidden");
-        document.getElementById("right-toggle-icon").textContent = "<";
-      }
-    }
-
-    setTimeout(() => this.updateContainerLayout(), 100);
-    if (this.isMobile()) {
-      if (this.panels.left) {
-        document.getElementById("left-panel").classList.add("hidden");
-        document.getElementById("left-toggle-icon").textContent = ">";
-        this.panels.left = false;
-      }
-      if (this.panels.right) {
-        document.getElementById("right-panel").classList.add("hidden");
-        document.getElementById("right-toggle-icon").textContent = "<";
-        this.panels.right = false;
-      }
-    }
-  },
-
-  togglePanel(side) {
-    const panel = document.getElementById(`${side}-panel`);
-    const icon = document.getElementById(`${side}-toggle-icon`);
-    const backdrop = document.getElementById("mobile-backdrop");
-
-    this.panels[side] = !this.panels[side];
-    localStorage.setItem(`${side}Panel`, this.panels[side]);
-
-    if (this.panels[side]) {
-      panel.classList.remove("hidden");
-      icon.textContent = side === "left" ? "<" : ">";
-
-      // Su mobile: mostra backdrop e chiudi l'altro pannello
-      if (this.isMobile()) {
-        backdrop.classList.add("active");
-        const otherSide = side === "left" ? "right" : "left";
-        if (this.panels[otherSide]) {
-          this.togglePanel(otherSide);
+        if (leftState !== null) {
+            this.panels.left = leftState === "true";
+            if (!this.panels.left) {
+                document.getElementById("left-panel").classList.add("hidden");
+                document.getElementById("left-toggle-icon").textContent = ">";
+            }
         }
-      }
-    } else {
-      panel.classList.add("hidden");
-      icon.textContent = side === "left" ? ">" : "<";
 
-      // Su mobile: nascondi backdrop se entrambi chiusi
-      if (this.isMobile() && !this.panels.left && !this.panels.right) {
-        backdrop.classList.remove("active");
-      }
-    }
+        if (rightState !== null) {
+            this.panels.right = rightState === "true";
+            if (!this.panels.right) {
+                document.getElementById("right-panel").classList.add("hidden");
+                document.getElementById("right-toggle-icon").textContent = "<";
+            }
+        }
 
-    this.updateContainerLayout();
-  },
+        setTimeout(() => this.updateContainerLayout(), 100);
+        if (this.isMobile()) {
+            if (this.panels.left) {
+                document.getElementById("left-panel").classList.add("hidden");
+                document.getElementById("left-toggle-icon").textContent = ">";
+                this.panels.left = false;
+            }
+            if (this.panels.right) {
+                document.getElementById("right-panel").classList.add("hidden");
+                document.getElementById("right-toggle-icon").textContent = "<";
+                this.panels.right = false;
+            }
+        }
+    },
 
-  updateContainerLayout() {
-    const container = document.getElementById("game-container");
-    container.classList.remove(
-      "left-collapsed",
-      "right-collapsed",
-      "both-collapsed",
-    );
+    togglePanel(side) {
+        const panel = document.getElementById(`${side}-panel`);
+        const icon = document.getElementById(`${side}-toggle-icon`);
+        const backdrop = document.getElementById("mobile-backdrop");
 
-    if (!this.panels.left && !this.panels.right) {
-      container.classList.add("both-collapsed");
-    } else if (!this.panels.left) {
-      container.classList.add("left-collapsed");
-    } else if (!this.panels.right) {
-      container.classList.add("right-collapsed");
-    }
-  },
+        this.panels[side] = !this.panels[side];
+        localStorage.setItem(`${side}Panel`, this.panels[side]);
 
-  initAudio() {
-    // Inizializza l'audio per i dadi
-    this.audio.dice = new Audio("src/music/dice.mp4");
-    this.audio.dice.volume = this.audio.volume;
+        if (this.panels[side]) {
+            panel.classList.remove("hidden");
+            icon.textContent = side === "left" ? "<" : ">";
 
-    // Carica le impostazioni audio salvate
-    const savedMusicEnabled = localStorage.getItem("musicEnabled");
-    const savedVolume = localStorage.getItem("audioVolume");
+            // Su mobile: mostra backdrop e chiudi l'altro pannello
+            if (this.isMobile()) {
+                backdrop.classList.add("active");
+                const otherSide = side === "left" ? "right" : "left";
+                if (this.panels[otherSide]) {
+                    this.togglePanel(otherSide);
+                }
+            }
+        } else {
+            panel.classList.add("hidden");
+            icon.textContent = side === "left" ? ">" : "<";
 
-    if (savedMusicEnabled !== null) {
-      this.audio.musicEnabled = savedMusicEnabled === "true";
-    }
-    if (savedVolume !== null) {
-      this.audio.volume = parseFloat(savedVolume);
-    }
-  },
+            // Su mobile: nascondi backdrop se entrambi chiusi
+            if (this.isMobile() && !this.panels.left && !this.panels.right) {
+                backdrop.classList.remove("active");
+            }
+        }
 
-  playDiceSound() {
-    if (this.audio.musicEnabled && this.audio.dice) {
-      this.audio.dice.currentTime = 0;
-      this.audio.dice.volume = this.audio.volume;
-      this.audio.dice
-        .play()
-        .catch((e) => console.log("Errore riproduzione suono dadi:", e));
-    }
-  },
+        this.updateContainerLayout();
+    },
 
-  playMusic(musicPath) {
-    if (!this.audio.musicEnabled) return;
+    updateContainerLayout() {
+        const container = document.getElementById("game-container");
+        container.classList.remove(
+            "left-collapsed",
+            "right-collapsed",
+            "both-collapsed",
+        );
 
-    // Ferma la musica precedente se presente
-    if (this.audio.music) {
-      this.audio.music.pause();
-      this.audio.music = null;
-    }
+        if (!this.panels.left && !this.panels.right) {
+            container.classList.add("both-collapsed");
+        } else if (!this.panels.left) {
+            container.classList.add("left-collapsed");
+        } else if (!this.panels.right) {
+            container.classList.add("right-collapsed");
+        }
+    },
 
-    if (musicPath) {
-      this.audio.music = new Audio(musicPath);
-      this.audio.music.volume = this.audio.volume;
-      this.audio.music.loop = true;
-      this.audio.music
-        .play()
-        .catch((e) => console.log("Errore riproduzione musica:", e));
-    }
-  },
+    initAudio() {
+        // Inizializza l'audio per i dadi
+        this.audio.dice = new Audio("src/music/dice.mp4");
+        this.audio.dice.volume = this.audio.volume;
 
-  toggleMusic() {
-    this.audio.musicEnabled = !this.audio.musicEnabled;
-    localStorage.setItem("musicEnabled", this.audio.musicEnabled);
+        // Carica le impostazioni audio salvate
+        const savedMusicEnabled = localStorage.getItem("musicEnabled");
+        const savedVolume = localStorage.getItem("audioVolume");
 
-    if (!this.audio.musicEnabled && this.audio.music) {
-      this.audio.music.pause();
-    } else if (this.audio.musicEnabled && this.audio.music) {
-      this.audio.music
-        .play()
-        .catch((e) => console.log("Errore riproduzione musica:", e));
-    }
+        if (savedMusicEnabled !== null) {
+            this.audio.musicEnabled = savedMusicEnabled === "true";
+        }
+        if (savedVolume !== null) {
+            this.audio.volume = parseFloat(savedVolume);
+        }
+    },
 
-    this.updateUI();
-  },
+    playDiceSound() {
+        if (this.audio.musicEnabled && this.audio.dice) {
+            this.audio.dice.currentTime = 0;
+            this.audio.dice.volume = this.audio.volume;
+            this.audio.dice
+                .play()
+                .catch((e) => console.log("Errore riproduzione suono dadi:", e));
+        }
+    },
 
-  setVolume(value) {
-    this.audio.volume = value;
-    localStorage.setItem("audioVolume", value);
+    playMusic(musicPath) {
+        if (!this.audio.musicEnabled) return;
 
-    if (this.audio.music) {
-      this.audio.music.volume = value;
-    }
-    if (this.audio.dice) {
-      this.audio.dice.volume = value;
-    }
-  },
+        // Ferma la musica precedente se presente
+        if (this.audio.music) {
+            this.audio.music.pause();
+            this.audio.music = null;
+        }
 
-  async loadStoryData() {
-    try {
-      const response = await fetch("story.json");
-      this.storyData = await response.json();
-    } catch (error) {
-      console.error("Errore caricamento dati:", error);
-      alert(
-        "Errore nel caricamento della storia. Verifica che story.json sia presente.",
-      );
-    }
-  },
+        if (musicPath) {
+            this.audio.music = new Audio(musicPath);
+            this.audio.music.volume = this.audio.volume;
+            this.audio.music.loop = true;
+            this.audio.music
+                .play()
+                .catch((e) => console.log("Errore riproduzione musica:", e));
+        }
+    },
 
-  showCharCreation() {
-    document.getElementById("char-creation").classList.remove("hidden");
-    this.loadPerks();
-    this.updateCharCreation();
-  },
+    toggleMusic() {
+        this.audio.musicEnabled = !this.audio.musicEnabled;
+        localStorage.setItem("musicEnabled", this.audio.musicEnabled);
 
-  loadPerks() {
-    const perksData = this.storyData[this.currentLang].perks || [];
-    const perksList = document.getElementById("perks-list");
+        if (!this.audio.musicEnabled && this.audio.music) {
+            this.audio.music.pause();
+        } else if (this.audio.musicEnabled && this.audio.music) {
+            this.audio.music
+                .play()
+                .catch((e) => console.log("Errore riproduzione musica:", e));
+        }
 
-    perksList.innerHTML = perksData
-      .map(
-        (perk) => `
+        this.updateUI();
+    },
+
+    setVolume(value) {
+        this.audio.volume = value;
+        localStorage.setItem("audioVolume", value);
+
+        if (this.audio.music) {
+            this.audio.music.volume = value;
+        }
+        if (this.audio.dice) {
+            this.audio.dice.volume = value;
+        }
+    },
+
+    async loadStoryData() {
+        try {
+            const response = await fetch("story.json");
+            this.storyData = await response.json();
+        } catch (error) {
+            console.error("Errore caricamento dati:", error);
+            alert(
+                "Errore nel caricamento della storia. Verifica che story.json sia presente.",
+            );
+        }
+    },
+
+    showCharCreation() {
+        document.getElementById("char-creation").classList.remove("hidden");
+        this.loadPerks();
+        this.updateCharCreation();
+    },
+
+    loadPerks() {
+        const perksData = this.storyData[this.currentLang].perks || [];
+        const perksList = document.getElementById("perks-list");
+
+        perksList.innerHTML = perksData
+            .map(
+                (perk) => `
             <div class="perk-item" data-perk-id="${perk.id}">
                 <input type="checkbox" id="perk-${perk.id}" onchange="game.togglePerk('${perk.id}')">
                 <label for="perk-${perk.id}">
@@ -390,239 +399,239 @@ const game = {
                 </label>
             </div>
         `,
-      )
-      .join("");
-  },
+            )
+            .join("");
+    },
 
-  togglePerk(perkId) {
-    const checkbox = document.getElementById(`perk-${perkId}`);
+    togglePerk(perkId) {
+        const checkbox = document.getElementById(`perk-${perkId}`);
 
-    if (checkbox.checked) {
-      if (this.state.perkPointsToSpend > 0) {
-        this.state.perks.push(perkId);
-        this.state.perkPointsToSpend--;
-      } else {
-        checkbox.checked = false;
-      }
-    } else {
-      const index = this.state.perks.indexOf(perkId);
-      if (index > -1) {
-        this.state.perks.splice(index, 1);
-        this.state.perkPointsToSpend++;
-      }
-    }
-
-    this.updateCharCreation();
-  },
-
-  adjustStat(stat, delta) {
-    const current = this.state.stats[stat];
-    const newValue = current + delta;
-
-    if (delta > 0 && this.state.pointsToSpend <= 0) return;
-    if (newValue < 0) return;
-
-    this.state.stats[stat] = newValue;
-    this.state.pointsToSpend -= delta;
-
-    this.updateCharCreation();
-  },
-
-  updateCharCreation() {
-    const ui = this.storyData[this.currentLang].ui;
-    document.getElementById("points-display").textContent =
-      `${ui.pointsRemaining}: ${this.state.pointsToSpend}`;
-    document.getElementById("perk-points-display").textContent =
-      `${ui.perkPoints || "Punti vantaggi"}: ${this.state.perkPointsToSpend}`;
-    document.getElementById("str-value").textContent =
-      this.state.stats.strength;
-    document.getElementById("dex-value").textContent =
-      this.state.stats.dexterity;
-    document.getElementById("int-value").textContent =
-      this.state.stats.intelligence;
-
-    const startBtn = document.getElementById("start-btn");
-    const nameInput = document.getElementById("char-name-input");
-    startBtn.disabled =
-      this.state.pointsToSpend !== 0 ||
-      this.state.perkPointsToSpend !== 0 ||
-      !nameInput.value.trim();
-  },
-
-  startGame() {
-    this.state.characterName = document
-      .getElementById("char-name-input")
-      .value.trim();
-    document.getElementById("char-creation").classList.add("hidden");
-    this.updateUI();
-    this.displayNode(this.currentNode);
-  },
-
-  displayNode(nodeId) {
-    this.currentNode = nodeId;
-    const node = this.storyData[this.currentLang].nodes[nodeId];
-
-    // Riproduce la musica se specificata nel nodo
-    if (node.music) {
-      this.playMusic(node.music);
-    }
-
-    // Costruisce il contenuto con eventuale immagine
-    let content = "";
-
-    if (node.image) {
-      content += `<img src="${node.image}" alt="Story scene" class="story-image">`;
-    }
-
-    // Processa il testo per i colori
-    const processedText = this.processColoredText(node.text);
-    content += `<p>${processedText}</p>`;
-
-    document.getElementById("story-content").innerHTML = content;
-
-    const choicesContainer = document.getElementById("choices-container");
-    choicesContainer.innerHTML = "";
-
-    node.choices.forEach((choice, index) => {
-      if (
-        choice.oneshot &&
-        this.state.usedChoices.includes(`${nodeId}_${index}`)
-      ) {
-        return;
-      }
-
-      const btn = document.createElement("button");
-      btn.className = "choice-btn";
-      btn.textContent = choice.text;
-
-      const canUse = this.checkRequirements(choice);
-      btn.disabled = !canUse.allowed;
-
-      if (!canUse.allowed && canUse.reason) {
-        const req = document.createElement("div");
-        req.className = "choice-requirements";
-        req.textContent = canUse.reason;
-        btn.appendChild(req);
-      }
-
-      btn.onclick = () => this.makeChoice(choice, nodeId, index);
-      choicesContainer.appendChild(btn);
-    });
-  },
-
-  processColoredText(text) {
-    text = text.replace(/\[(\w+):(.*?)\]/g, (match, color, content) => {
-      return `<span class="text-${color}">${content}</span>`;
-    });
-
-    text = text.replace(/\{(\w+):(.*?)\}/g, (match, color, content) => {
-      return `<div class="dialogue text-${color}">${content}</div>`;
-    });
-
-    return text;
-  },
-
-  checkRequirements(choice) {
-    const ui = this.storyData[this.currentLang].ui;
-
-    if (choice.requirements) {
-      if (choice.requirements.items) {
-        for (let itemId of choice.requirements.items) {
-          if (!this.state.inventory.find((i) => i.id === itemId)) {
-            const itemName = choice.requirements.items.join(", ");
-            return { allowed: false, reason: `${ui.requires}: ${itemName}` };
-          }
+        if (checkbox.checked) {
+            if (this.state.perkPointsToSpend > 0) {
+                this.state.perks.push(perkId);
+                this.state.perkPointsToSpend--;
+            } else {
+                checkbox.checked = false;
+            }
+        } else {
+            const index = this.state.perks.indexOf(perkId);
+            if (index > -1) {
+                this.state.perks.splice(index, 1);
+                this.state.perkPointsToSpend++;
+            }
         }
-      }
 
-      if (choice.requirements.flags) {
-        for (let flag of choice.requirements.flags) {
-          if (!this.state.flags.includes(flag)) {
-            return { allowed: false, reason: `${ui.requires}: ${flag}` };
-          }
+        this.updateCharCreation();
+    },
+
+    adjustStat(stat, delta) {
+        const current = this.state.stats[stat];
+        const newValue = current + delta;
+
+        if (delta > 0 && this.state.pointsToSpend <= 0) return;
+        if (newValue < 0) return;
+
+        this.state.stats[stat] = newValue;
+        this.state.pointsToSpend -= delta;
+
+        this.updateCharCreation();
+    },
+
+    updateCharCreation() {
+        const ui = this.storyData[this.currentLang].ui;
+        document.getElementById("points-display").textContent =
+            `${ui.pointsRemaining}: ${this.state.pointsToSpend}`;
+        document.getElementById("perk-points-display").textContent =
+            `${ui.perkPoints || "Punti vantaggi"}: ${this.state.perkPointsToSpend}`;
+        document.getElementById("str-value").textContent =
+            this.state.stats.strength;
+        document.getElementById("dex-value").textContent =
+            this.state.stats.dexterity;
+        document.getElementById("int-value").textContent =
+            this.state.stats.intelligence;
+
+        const startBtn = document.getElementById("start-btn");
+        const nameInput = document.getElementById("char-name-input");
+        startBtn.disabled =
+            this.state.pointsToSpend !== 0 ||
+            this.state.perkPointsToSpend !== 0 ||
+            !nameInput.value.trim();
+    },
+
+    startGame() {
+        this.state.characterName = document
+            .getElementById("char-name-input")
+            .value.trim();
+        document.getElementById("char-creation").classList.add("hidden");
+        this.updateUI();
+        this.displayNode(this.currentNode);
+    },
+
+    displayNode(nodeId) {
+        this.currentNode = nodeId;
+        const node = this.storyData[this.currentLang].nodes[nodeId];
+
+        // Riproduce la musica se specificata nel nodo
+        if (node.music) {
+            this.playMusic(node.music);
         }
-      }
 
-      if (choice.requirements.perks) {
-        for (let perkId of choice.requirements.perks) {
-          if (!this.state.perks.includes(perkId)) {
-            const perkData = this.storyData[this.currentLang].perks.find(
-              (p) => p.id === perkId,
-            );
-            const perkName = perkData ? perkData.name : perkId;
-            return { allowed: false, reason: `${ui.requires}: ${perkName}` };
-          }
+        // Costruisce il contenuto con eventuale immagine
+        let content = "";
+
+        if (node.image) {
+            content += `<img src="${node.image}" alt="Story scene" class="story-image">`;
         }
-      }
-    }
 
-    return { allowed: true };
-  },
+        // Processa il testo per i colori
+        const processedText = this.processColoredText(node.text);
+        content += `<p>${processedText}</p>`;
 
-  async makeChoice(choice, nodeId, index) {
-    if (choice.oneshot) {
-      this.state.usedChoices.push(`${nodeId}_${index}`);
-    }
+        document.getElementById("story-content").innerHTML = content;
 
-    let nextNode = choice.next;
+        const choicesContainer = document.getElementById("choices-container");
+        choicesContainer.innerHTML = "";
 
-    if (choice.test) {
-      const result = await this.performTest(choice.test);
-      if (!result.success) {
-        nextNode = choice.next + "_fail";
-      }
-    }
+        node.choices.forEach((choice, index) => {
+            if (
+                choice.oneshot &&
+                this.state.usedChoices.includes(`${nodeId}_${index}`)
+            ) {
+                return;
+            }
 
-    if (choice.effects) {
-      this.applyEffects(choice.effects);
-    }
+            const btn = document.createElement("button");
+            btn.className = "choice-btn";
+            btn.textContent = choice.text;
 
-    this.updateUI();
-    this.displayNode(nextNode);
-  },
+            const canUse = this.checkRequirements(choice);
+            btn.disabled = !canUse.allowed;
 
-  async performTest(test) {
-    const ui = this.storyData[this.currentLang].ui;
-    const statNames = {
-      strength: ui.strength,
-      dexterity: ui.dexterity,
-      intelligence: ui.intelligence,
-    };
+            if (!canUse.allowed && canUse.reason) {
+                const req = document.createElement("div");
+                req.className = "choice-requirements";
+                req.textContent = canUse.reason;
+                btn.appendChild(req);
+            }
 
-    return new Promise((resolve) => {
-      const diceEl = document.getElementById("dice-roll");
-      const displayEl = document.getElementById("dice-display");
-      const resultEl = document.getElementById("dice-result");
-      const testNameEl = document.getElementById("dice-test-name");
+            btn.onclick = () => this.makeChoice(choice, nodeId, index);
+            choicesContainer.appendChild(btn);
+        });
+    },
 
-      testNameEl.textContent = `${ui.test} ${statNames[test.stat]}`;
-      resultEl.textContent = "";
-      diceEl.classList.remove("hidden");
+    processColoredText(text) {
+        text = text.replace(/\[(\w+):(.*?)\]/g, (match, color, content) => {
+            return `<span class="text-${color}">${content}</span>`;
+        });
 
-      // Suono dei dadi
-      this.playDiceSound();
+        text = text.replace(/\{(\w+):(.*?)\}/g, (match, color, content) => {
+            return `<div class="dialogue text-${color}">${content}</div>`;
+        });
 
-      let count = 0;
-      const interval = setInterval(() => {
-        // Animazione dadi che rotolano
-        const symbols = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
-        const random1 = symbols[Math.floor(Math.random() * 6)];
-        const random2 = symbols[Math.floor(Math.random() * 6)];
-        displayEl.textContent = `${random1} ${random2}`;
-        count++;
+        return text;
+    },
 
-        if (count > 15) {
-          clearInterval(interval);
+    checkRequirements(choice) {
+        const ui = this.storyData[this.currentLang].ui;
 
-          const dice1 = Math.floor(Math.random() * 6) + 1;
-          const dice2 = Math.floor(Math.random() * 6) + 1;
-          const bonus = this.state.stats[test.stat];
-          const total = dice1 + dice2 + bonus;
-          const success = total >= test.difficulty;
+        if (choice.requirements) {
+            if (choice.requirements.items) {
+                for (let itemId of choice.requirements.items) {
+                    if (!this.state.inventory.find((i) => i.id === itemId)) {
+                        const itemName = choice.requirements.items.join(", ");
+                        return { allowed: false, reason: `${ui.requires}: ${itemName}` };
+                    }
+                }
+            }
 
-          // Mostra simboli dei dadi finali
-          const finalSymbols = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
-          displayEl.innerHTML = `
+            if (choice.requirements.flags) {
+                for (let flag of choice.requirements.flags) {
+                    if (!this.state.flags.includes(flag)) {
+                        return { allowed: false, reason: `${ui.requires}: ${flag}` };
+                    }
+                }
+            }
+
+            if (choice.requirements.perks) {
+                for (let perkId of choice.requirements.perks) {
+                    if (!this.state.perks.includes(perkId)) {
+                        const perkData = this.storyData[this.currentLang].perks.find(
+                            (p) => p.id === perkId,
+                        );
+                        const perkName = perkData ? perkData.name : perkId;
+                        return { allowed: false, reason: `${ui.requires}: ${perkName}` };
+                    }
+                }
+            }
+        }
+
+        return { allowed: true };
+    },
+
+    async makeChoice(choice, nodeId, index) {
+        if (choice.oneshot) {
+            this.state.usedChoices.push(`${nodeId}_${index}`);
+        }
+
+        let nextNode = choice.next;
+
+        if (choice.test) {
+            const result = await this.performTest(choice.test);
+            if (!result.success) {
+                nextNode = choice.next + "_fail";
+            }
+        }
+
+        if (choice.effects) {
+            this.applyEffects(choice.effects);
+        }
+
+        this.updateUI();
+        this.displayNode(nextNode);
+    },
+
+    async performTest(test) {
+        const ui = this.storyData[this.currentLang].ui;
+        const statNames = {
+            strength: ui.strength,
+            dexterity: ui.dexterity,
+            intelligence: ui.intelligence,
+        };
+
+        return new Promise((resolve) => {
+            const diceEl = document.getElementById("dice-roll");
+            const displayEl = document.getElementById("dice-display");
+            const resultEl = document.getElementById("dice-result");
+            const testNameEl = document.getElementById("dice-test-name");
+
+            testNameEl.textContent = `${ui.test} ${statNames[test.stat]}`;
+            resultEl.textContent = "";
+            diceEl.classList.remove("hidden");
+
+            // Suono dei dadi
+            this.playDiceSound();
+
+            let count = 0;
+            const interval = setInterval(() => {
+                // Animazione dadi che rotolano
+                const symbols = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+                const random1 = symbols[Math.floor(Math.random() * 6)];
+                const random2 = symbols[Math.floor(Math.random() * 6)];
+                displayEl.textContent = `${random1} ${random2}`;
+                count++;
+
+                if (count > 15) {
+                    clearInterval(interval);
+
+                    const dice1 = Math.floor(Math.random() * 6) + 1;
+                    const dice2 = Math.floor(Math.random() * 6) + 1;
+                    const bonus = this.state.stats[test.stat];
+                    const total = dice1 + dice2 + bonus;
+                    const success = total >= test.difficulty;
+
+                    // Mostra simboli dei dadi finali
+                    const finalSymbols = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+                    displayEl.innerHTML = `
                         <div style="font-size: 2em; margin-bottom: 10px;">
                             ${finalSymbols[dice1 - 1]} ${finalSymbols[dice2 - 1]}
                         </div>
@@ -631,371 +640,371 @@ const game = {
                         </div>
                     `;
 
-          resultEl.innerHTML = success
-            ? `<strong style="color: var(--success); font-size: 1.3em;">✅ ${ui.testSuccess || "Successo"}!</strong>`
-            : `<strong style="color: var(--danger); font-size: 1.3em;">❌ ${ui.testFailed || "Fallimento"}</strong><br>
+                    resultEl.innerHTML = success
+                        ? `<strong style="color: var(--success); font-size: 1.3em;">✅ ${ui.testSuccess || "Successo"}!</strong>`
+                        : `<strong style="color: var(--danger); font-size: 1.3em;">❌ ${ui.testFailed || "Fallimento"}</strong><br>
                          <span style="font-size: 0.9em;">(${ui.needed || "Serviva"} ${test.difficulty})</span>`;
 
-          setTimeout(() => {
-            diceEl.classList.add("hidden");
-            resolve({ success, total });
-          }, 2500);
+                    setTimeout(() => {
+                        diceEl.classList.add("hidden");
+                        resolve({ success, total });
+                    }, 2500);
+                }
+            }, 100);
+        });
+    },
+
+    applyEffects(effects) {
+        if (effects.health) {
+            this.state.stats.health = Math.max(
+                0,
+                Math.min(
+                    this.state.stats.maxHealth,
+                    this.state.stats.health + effects.health,
+                ),
+            );
         }
-      }, 100);
-    });
-  },
 
-  applyEffects(effects) {
-    if (effects.health) {
-      this.state.stats.health = Math.max(
-        0,
-        Math.min(
-          this.state.stats.maxHealth,
-          this.state.stats.health + effects.health,
-        ),
-      );
-    }
+        if (effects.sanity) {
+            this.state.stats.sanity = Math.max(
+                0,
+                Math.min(
+                    this.state.stats.maxSanity,
+                    this.state.stats.sanity + effects.sanity,
+                ),
+            );
+        }
 
-    if (effects.sanity) {
-      this.state.stats.sanity = Math.max(
-        0,
-        Math.min(
-          this.state.stats.maxSanity,
-          this.state.stats.sanity + effects.sanity,
-        ),
-      );
-    }
+        if (effects.items) {
+            effects.items.forEach((item) => {
+                if (item.type === "consume") {
+                    const index = this.state.inventory.findIndex((i) => i.id === item.id);
+                    if (index !== -1) {
+                        this.state.inventory.splice(index, 1);
+                    }
+                } else {
+                    this.state.inventory.push(item);
+                }
+            });
+        }
 
-    if (effects.items) {
-      effects.items.forEach((item) => {
-        if (item.type === "consume") {
-          const index = this.state.inventory.findIndex((i) => i.id === item.id);
-          if (index !== -1) {
-            this.state.inventory.splice(index, 1);
-          }
+        if (effects.flags) {
+            effects.flags.forEach((flag) => {
+                if (!this.state.flags.includes(flag)) {
+                    this.state.flags.push(flag);
+                }
+            });
+        }
+    },
+
+    updateUI() {
+        const ui = this.storyData[this.currentLang].ui;
+
+        document.getElementById("stats-title").textContent = ui.stats;
+        document.getElementById("inventory-title").textContent = ui.inventory;
+        document.getElementById("controls-title").textContent = ui.controls;
+        document.getElementById("lang-title").textContent = ui.language;
+        document.getElementById("theme-title").textContent = ui.theme;
+        document.getElementById("save-title").textContent = ui.save;
+        document.getElementById("audio-title").textContent = ui.audio || "Audio";
+
+        document.getElementById("stat-str").textContent = ui.strength;
+        document.getElementById("stat-dex").textContent = ui.dexterity;
+        document.getElementById("stat-int").textContent = ui.intelligence;
+        document.getElementById("stat-health").textContent = ui.health;
+        document.getElementById("stat-sanity").textContent = ui.sanity;
+
+        document.getElementById("stat-str-val").textContent =
+            this.state.stats.strength;
+        document.getElementById("stat-dex-val").textContent =
+            this.state.stats.dexterity;
+        document.getElementById("stat-int-val").textContent =
+            this.state.stats.intelligence;
+
+        document.getElementById("stat-health-val").textContent =
+            `${this.state.stats.health}/${this.state.stats.maxHealth}`;
+        document.getElementById("stat-sanity-val").textContent =
+            `${this.state.stats.sanity}/${this.state.stats.maxSanity}`;
+
+        const healthPercent =
+            (this.state.stats.health / this.state.stats.maxHealth) * 100;
+        const healthBar = document.getElementById("health-bar");
+        healthBar.style.width = healthPercent + "%";
+        healthBar.className = "stat-bar-fill";
+        if (healthPercent <= 30) healthBar.classList.add("danger");
+        else if (healthPercent <= 60) healthBar.classList.add("warning");
+
+        const sanityPercent =
+            (this.state.stats.sanity / this.state.stats.maxSanity) * 100;
+        const sanityBar = document.getElementById("sanity-bar");
+        sanityBar.style.width = sanityPercent + "%";
+        sanityBar.className = "stat-bar-fill";
+        if (sanityPercent <= 30) sanityBar.classList.add("danger");
+        else if (sanityPercent <= 60) sanityBar.classList.add("warning");
+
+        const inventoryList = document.getElementById("inventory-list");
+        if (this.state.inventory.length === 0) {
+            inventoryList.innerHTML = `<div class="inventory-empty">${ui.inventoryEmpty}</div>`;
         } else {
-          this.state.inventory.push(item);
-        }
-      });
-    }
-
-    if (effects.flags) {
-      effects.flags.forEach((flag) => {
-        if (!this.state.flags.includes(flag)) {
-          this.state.flags.push(flag);
-        }
-      });
-    }
-  },
-
-  updateUI() {
-    const ui = this.storyData[this.currentLang].ui;
-
-    document.getElementById("stats-title").textContent = ui.stats;
-    document.getElementById("inventory-title").textContent = ui.inventory;
-    document.getElementById("controls-title").textContent = ui.controls;
-    document.getElementById("lang-title").textContent = ui.language;
-    document.getElementById("theme-title").textContent = ui.theme;
-    document.getElementById("save-title").textContent = ui.save;
-    document.getElementById("audio-title").textContent = ui.audio || "Audio";
-
-    document.getElementById("stat-str").textContent = ui.strength;
-    document.getElementById("stat-dex").textContent = ui.dexterity;
-    document.getElementById("stat-int").textContent = ui.intelligence;
-    document.getElementById("stat-health").textContent = ui.health;
-    document.getElementById("stat-sanity").textContent = ui.sanity;
-
-    document.getElementById("stat-str-val").textContent =
-      this.state.stats.strength;
-    document.getElementById("stat-dex-val").textContent =
-      this.state.stats.dexterity;
-    document.getElementById("stat-int-val").textContent =
-      this.state.stats.intelligence;
-
-    document.getElementById("stat-health-val").textContent =
-      `${this.state.stats.health}/${this.state.stats.maxHealth}`;
-    document.getElementById("stat-sanity-val").textContent =
-      `${this.state.stats.sanity}/${this.state.stats.maxSanity}`;
-
-    const healthPercent =
-      (this.state.stats.health / this.state.stats.maxHealth) * 100;
-    const healthBar = document.getElementById("health-bar");
-    healthBar.style.width = healthPercent + "%";
-    healthBar.className = "stat-bar-fill";
-    if (healthPercent <= 30) healthBar.classList.add("danger");
-    else if (healthPercent <= 60) healthBar.classList.add("warning");
-
-    const sanityPercent =
-      (this.state.stats.sanity / this.state.stats.maxSanity) * 100;
-    const sanityBar = document.getElementById("sanity-bar");
-    sanityBar.style.width = sanityPercent + "%";
-    sanityBar.className = "stat-bar-fill";
-    if (sanityPercent <= 30) sanityBar.classList.add("danger");
-    else if (sanityPercent <= 60) sanityBar.classList.add("warning");
-
-    const inventoryList = document.getElementById("inventory-list");
-    if (this.state.inventory.length === 0) {
-      inventoryList.innerHTML = `<div class="inventory-empty">${ui.inventoryEmpty}</div>`;
-    } else {
-      inventoryList.innerHTML = this.state.inventory
-        .map((item, index) => {
-          const itemData = this.storyData[this.currentLang].items[item.id];
-          return `<div class="inventory-item" onclick="game.showItemModal('${item.id}', ${index})">
+            inventoryList.innerHTML = this.state.inventory
+                .map((item, index) => {
+                    const itemData = this.storyData[this.currentLang].items[item.id];
+                    return `<div class="inventory-item" onclick="game.showItemModal('${item.id}', ${index})">
                     <span class="inventory-item-icon">${itemData.icon || "📦"}</span>
                     <span>${item.name}</span>
                 </div>`;
-        })
-        .join("");
-    }
+                })
+                .join("");
+        }
 
-    const maxCapacity = this.state.stats.strength + 5;
-    document.getElementById("inventory-capacity").textContent =
-      `${ui.capacity}: ${this.state.inventory.length}/${maxCapacity}`;
+        const maxCapacity = this.state.stats.strength + 5;
+        document.getElementById("inventory-capacity").textContent =
+            `${ui.capacity}: ${this.state.inventory.length}/${maxCapacity}`;
 
-    document.getElementById("save-btn").textContent = ui.saveGame;
-    document.getElementById("load-btn").textContent = ui.loadGame;
-    document.getElementById("reset-btn").textContent = ui.newGame;
-    document.getElementById("theme-btn").textContent =
-      this.theme === "light" ? ui.darkTheme : ui.lightTheme;
+        document.getElementById("save-btn").textContent = ui.saveGame;
+        document.getElementById("load-btn").textContent = ui.loadGame;
+        document.getElementById("reset-btn").textContent = ui.newGame;
+        document.getElementById("theme-btn").textContent =
+            this.theme === "light" ? ui.darkTheme : ui.lightTheme;
 
-    // Aggiorna controlli audio
-    const musicBtn = document.getElementById("music-toggle");
-    if (musicBtn) {
-      musicBtn.textContent = this.audio.musicEnabled
-        ? ui.musicOff || "Disattiva Audio"
-        : ui.musicOn || "Attiva Audio";
-    }
+        // Aggiorna controlli audio
+        const musicBtn = document.getElementById("music-toggle");
+        if (musicBtn) {
+            musicBtn.textContent = this.audio.musicEnabled
+                ? ui.musicOff || "Disattiva Audio"
+                : ui.musicOn || "Attiva Audio";
+        }
 
-    const volumeSlider = document.getElementById("volume-slider");
-    if (volumeSlider) {
-      volumeSlider.value = this.audio.volume * 100;
-    }
+        const volumeSlider = document.getElementById("volume-slider");
+        if (volumeSlider) {
+            volumeSlider.value = this.audio.volume * 100;
+        }
 
-    const volumeLabel = document.getElementById("volume-label");
-    if (volumeLabel) {
-      volumeLabel.textContent = `${ui.volume || "Volume"}: ${Math.round(this.audio.volume * 100)}%`;
-    }
+        const volumeLabel = document.getElementById("volume-label");
+        if (volumeLabel) {
+            volumeLabel.textContent = `${ui.volume || "Volume"}: ${Math.round(this.audio.volume * 100)}%`;
+        }
 
-    document.getElementById("char-title").textContent = ui.charCreation;
-    document.getElementById("char-description").textContent =
-      ui.charDescription;
-    document.getElementById("str-label").textContent = ui.strength;
-    document.getElementById("dex-label").textContent = ui.dexterity;
-    document.getElementById("int-label").textContent = ui.intelligence;
-    document.getElementById("start-btn").textContent = ui.startAdventure;
+        document.getElementById("char-title").textContent = ui.charCreation;
+        document.getElementById("char-description").textContent =
+            ui.charDescription;
+        document.getElementById("str-label").textContent = ui.strength;
+        document.getElementById("dex-label").textContent = ui.dexterity;
+        document.getElementById("int-label").textContent = ui.intelligence;
+        document.getElementById("start-btn").textContent = ui.startAdventure;
 
-    if (document.getElementById("mobile-nav-stats-label")) {
-      document.getElementById("mobile-nav-stats-label").textContent =
-        ui.mobileNavStats || "Stats";
-      document.getElementById("mobile-nav-story-label").textContent =
-        ui.mobileNavStory || "Storia";
-      document.getElementById("mobile-nav-controls-label").textContent =
-        ui.mobileNavControls || "Menu";
-    }
-  },
+        if (document.getElementById("mobile-nav-stats-label")) {
+            document.getElementById("mobile-nav-stats-label").textContent =
+                ui.mobileNavStats || "Stats";
+            document.getElementById("mobile-nav-story-label").textContent =
+                ui.mobileNavStory || "Storia";
+            document.getElementById("mobile-nav-controls-label").textContent =
+                ui.mobileNavControls || "Menu";
+        }
+    },
 
-  showItemModal(itemId, inventoryIndex) {
-    const itemData = this.storyData[this.currentLang].items[itemId];
-    const item = this.state.inventory[inventoryIndex];
+    showItemModal(itemId, inventoryIndex) {
+        const itemData = this.storyData[this.currentLang].items[itemId];
+        const item = this.state.inventory[inventoryIndex];
 
-    document.getElementById("item-name").textContent = item.name;
-    document.getElementById("item-description").textContent =
-      itemData.description;
-    document.getElementById("item-image").src =
-      itemData.image || "https://via.placeholder.com/300x200?text=No+Image";
+        document.getElementById("item-name").textContent = item.name;
+        document.getElementById("item-description").textContent =
+            itemData.description;
+        document.getElementById("item-image").src =
+            itemData.image || "https://via.placeholder.com/300x200?text=No+Image";
 
-    const actionsDiv = document.getElementById("item-actions");
-    actionsDiv.innerHTML = "";
+        const actionsDiv = document.getElementById("item-actions");
+        actionsDiv.innerHTML = "";
 
-    if (itemData.usable) {
-      const useBtn = document.createElement("button");
-      useBtn.className = "btn btn-primary";
-      useBtn.textContent = this.storyData[this.currentLang].ui.useItem || "Usa";
-      useBtn.onclick = () => this.useItem(itemId, inventoryIndex);
-      actionsDiv.appendChild(useBtn);
-    }
+        if (itemData.usable) {
+            const useBtn = document.createElement("button");
+            useBtn.className = "btn btn-primary";
+            useBtn.textContent = this.storyData[this.currentLang].ui.useItem || "Usa";
+            useBtn.onclick = () => this.useItem(itemId, inventoryIndex);
+            actionsDiv.appendChild(useBtn);
+        }
 
-    if (item.type === "consumable" || item.type === "permanent") {
-      const dropBtn = document.createElement("button");
-      dropBtn.className = "btn btn-danger";
-      dropBtn.textContent =
-        this.storyData[this.currentLang].ui.dropItem || "Elimina";
-      dropBtn.onclick = () => this.dropItem(inventoryIndex);
-      actionsDiv.appendChild(dropBtn);
-    }
+        if (item.type === "consumable" || item.type === "permanent") {
+            const dropBtn = document.createElement("button");
+            dropBtn.className = "btn btn-danger";
+            dropBtn.textContent =
+                this.storyData[this.currentLang].ui.dropItem || "Elimina";
+            dropBtn.onclick = () => this.dropItem(inventoryIndex);
+            actionsDiv.appendChild(dropBtn);
+        }
 
-    document.getElementById("item-modal").classList.remove("hidden");
-  },
+        document.getElementById("item-modal").classList.remove("hidden");
+    },
 
-  closeItemModal() {
-    document.getElementById("item-modal").classList.add("hidden");
-  },
+    closeItemModal() {
+        document.getElementById("item-modal").classList.add("hidden");
+    },
 
-  useItem(itemId, inventoryIndex) {
-    const itemData = this.storyData[this.currentLang].items[itemId];
+    useItem(itemId, inventoryIndex) {
+        const itemData = this.storyData[this.currentLang].items[itemId];
 
-    if (itemData.effects) {
-      this.applyEffects(itemData.effects);
-    }
+        if (itemData.effects) {
+            this.applyEffects(itemData.effects);
+        }
 
-    const item = this.state.inventory[inventoryIndex];
-    if (item.type === "consumable") {
-      this.state.inventory.splice(inventoryIndex, 1);
-    }
+        const item = this.state.inventory[inventoryIndex];
+        if (item.type === "consumable") {
+            this.state.inventory.splice(inventoryIndex, 1);
+        }
 
-    this.closeItemModal();
-    this.updateUI();
+        this.closeItemModal();
+        this.updateUI();
 
-    alert(itemData.useMessage || "Oggetto usato!");
-  },
+        alert(itemData.useMessage || "Oggetto usato!");
+    },
 
-  dropItem(inventoryIndex) {
-    if (
-      confirm(
-        this.storyData[this.currentLang].ui.confirmDrop ||
-          "Sei sicuro di voler eliminare questo oggetto?",
-      )
-    ) {
-      this.state.inventory.splice(inventoryIndex, 1);
-      this.closeItemModal();
-      this.updateUI();
-    }
-  },
+    dropItem(inventoryIndex) {
+        if (
+            confirm(
+                this.storyData[this.currentLang].ui.confirmDrop ||
+                "Sei sicuro di voler eliminare questo oggetto?",
+            )
+        ) {
+            this.state.inventory.splice(inventoryIndex, 1);
+            this.closeItemModal();
+            this.updateUI();
+        }
+    },
 
-  changeLanguage(lang) {
-    this.currentLang = lang;
-    this.updateUI();
-    this.displayNode(this.currentNode);
-  },
+    changeLanguage(lang) {
+        this.currentLang = lang;
+        this.updateUI();
+        this.displayNode(this.currentNode);
+    },
 
-  toggleTheme() {
-    this.theme = this.theme === "light" ? "dark" : "light";
-    document.documentElement.setAttribute("data-theme", this.theme);
-    localStorage.setItem("theme", this.theme);
-    this.updateUI();
-  },
+    toggleTheme() {
+        this.theme = this.theme === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", this.theme);
+        localStorage.setItem("theme", this.theme);
+        this.updateUI();
+    },
 
-  loadTheme() {
-    const saved = localStorage.getItem("theme");
-    if (saved) {
-      this.theme = saved;
-      document.documentElement.setAttribute("data-theme", this.theme);
-    }
-  },
+    loadTheme() {
+        const saved = localStorage.getItem("theme");
+        if (saved) {
+            this.theme = saved;
+            document.documentElement.setAttribute("data-theme", this.theme);
+        }
+    },
 
-  saveGame() {
-    const saveData = {
-      state: this.state,
-      currentNode: this.currentNode,
-      currentLang: this.currentLang,
-    };
-    localStorage.setItem("gameSave", JSON.stringify(saveData));
-    alert(this.storyData[this.currentLang].ui.saveGame + " ✓");
-  },
+    saveGame() {
+        const saveData = {
+            state: this.state,
+            currentNode: this.currentNode,
+            currentLang: this.currentLang,
+        };
+        localStorage.setItem("gameSave", JSON.stringify(saveData));
+        alert(this.storyData[this.currentLang].ui.saveGame + " ✓");
+    },
 
-  loadGame() {
-    const saved = localStorage.getItem("gameSave");
-    if (saved) {
-      const data = JSON.parse(saved);
-      this.state = data.state;
-      this.currentNode = data.currentNode;
-      this.currentLang = data.currentLang;
-      document.getElementById("language-select").value = this.currentLang;
-      document.getElementById("char-creation").classList.add("hidden");
-      this.updateUI();
-      this.displayNode(this.currentNode);
-    } else {
-      alert("Nessun salvataggio trovato / No save found");
-    }
-  },
+    loadGame() {
+        const saved = localStorage.getItem("gameSave");
+        if (saved) {
+            const data = JSON.parse(saved);
+            this.state = data.state;
+            this.currentNode = data.currentNode;
+            this.currentLang = data.currentLang;
+            document.getElementById("language-select").value = this.currentLang;
+            document.getElementById("char-creation").classList.add("hidden");
+            this.updateUI();
+            this.displayNode(this.currentNode);
+        } else {
+            alert("Nessun salvataggio trovato / No save found");
+        }
+    },
 
-  resetGame() {
-    if (
-      confirm(
-        this.storyData[this.currentLang].ui.confirmRestart ||
-          "Sei sicuro di voler ricominciare? / Are you sure you want to restart?",
-      )
-    ) {
-      this.state = {
-        stats: {
-          strength: 0,
-          dexterity: 0,
-          intelligence: 0,
-          health: 5,
-          maxHealth: 5,
-          sanity: 5,
-          maxSanity: 5,
-        },
-        inventory: [],
-        flags: [],
-        perks: [],
-        usedChoices: [],
-        pointsToSpend: 3,
-        perkPointsToSpend: 1,
-      };
-      this.currentNode = "start";
+    resetGame() {
+        if (
+            confirm(
+                this.storyData[this.currentLang].ui.confirmRestart ||
+                "Sei sicuro di voler ricominciare? / Are you sure you want to restart?",
+            )
+        ) {
+            this.state = {
+                stats: {
+                    strength: 0,
+                    dexterity: 0,
+                    intelligence: 0,
+                    health: 5,
+                    maxHealth: 5,
+                    sanity: 5,
+                    maxSanity: 5,
+                },
+                inventory: [],
+                flags: [],
+                perks: [],
+                usedChoices: [],
+                pointsToSpend: 3,
+                perkPointsToSpend: 1,
+            };
+            this.currentNode = "start";
 
-      // Torna al menu principale
-      document.getElementById("game-container").classList.add("hidden");
-      document.getElementById("main-menu").classList.remove("hidden");
-      this.updateMainMenu();
-    }
-  },
+            // Torna al menu principale
+            document.getElementById("game-container").classList.add("hidden");
+            document.getElementById("main-menu").classList.remove("hidden");
+            this.updateMainMenu();
+        }
+    },
 };
 
 window.addEventListener("resize", () => {
-  if (game.isMobile()) {
-    // Chiudi pannelli se passi a mobile
-    if (game.panels.left || game.panels.right) {
-      game.closeMobilePanels();
+    if (game.isMobile()) {
+        // Chiudi pannelli se passi a mobile
+        if (game.panels.left || game.panels.right) {
+            game.closeMobilePanels();
+        }
+    } else {
+        // Rimuovi backdrop se torni a desktop
+        document.getElementById("mobile-backdrop").classList.remove("active");
     }
-  } else {
-    // Rimuovi backdrop se torni a desktop
-    document.getElementById("mobile-backdrop").classList.remove("active");
-  }
 });
 
 // Click su backdrop chiude pannelli
 document.addEventListener("click", (e) => {
-  if (e.target.id === "mobile-backdrop") {
-    game.closeMobilePanels();
-  }
+    if (e.target.id === "mobile-backdrop") {
+        game.closeMobilePanels();
+    }
 });
 
 // Click su X nei pannelli (::before)
 document.addEventListener("click", (e) => {
-  const leftPanel = document.getElementById("left-panel");
-  const rightPanel = document.getElementById("right-panel");
+    const leftPanel = document.getElementById("left-panel");
+    const rightPanel = document.getElementById("right-panel");
 
-  if (leftPanel && leftPanel.classList.contains("mobile-visible")) {
-    const rect = leftPanel.getBoundingClientRect();
-    const closeX = rect.right - 60;
-    const closeY = 15;
+    if (leftPanel && leftPanel.classList.contains("mobile-visible")) {
+        const rect = leftPanel.getBoundingClientRect();
+        const closeX = rect.right - 60;
+        const closeY = 15;
 
-    if (
-      e.clientX >= closeX &&
-      e.clientX <= closeX + 40 &&
-      e.clientY >= closeY &&
-      e.clientY <= closeY + 40
-    ) {
-      game.closeMobilePanels();
+        if (
+            e.clientX >= closeX &&
+            e.clientX <= closeX + 40 &&
+            e.clientY >= closeY &&
+            e.clientY <= closeY + 40
+        ) {
+            game.closeMobilePanels();
+        }
     }
-  }
 
-  if (rightPanel && rightPanel.classList.contains("mobile-visible")) {
-    const rect = rightPanel.getBoundingClientRect();
-    const closeX = rect.right - 60;
-    const closeY = 15;
+    if (rightPanel && rightPanel.classList.contains("mobile-visible")) {
+        const rect = rightPanel.getBoundingClientRect();
+        const closeX = rect.right - 60;
+        const closeY = 15;
 
-    if (
-      e.clientX >= closeX &&
-      e.clientX <= closeX + 40 &&
-      e.clientY >= closeY &&
-      e.clientY <= closeY + 40
-    ) {
-      game.closeMobilePanels();
+        if (
+            e.clientX >= closeX &&
+            e.clientX <= closeX + 40 &&
+            e.clientY >= closeY &&
+            e.clientY <= closeY + 40
+        ) {
+            game.closeMobilePanels();
+        }
     }
-  }
 });
 
 window.onload = () => game.init();

@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Librogame Engine</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <!-- Main Menu Screen -->
     <div id="main-menu" class="main-menu">
         <div class="menu-container">
             <h1 id="game-title" class="game-title">L'Antica Cripta</h1>
-            
+
             <div class="menu-buttons">
                 <button class="menu-btn" onclick="game.newGame()" id="menu-new-game">
                     <span id="menu-new-text">Nuova Partita</span>
                 </button>
-                
+
                 <button class="menu-btn" onclick="game.loadGameFromMenu()" id="menu-load-game">
                     <span id="menu-load-text">Carica Partita</span>
                 </button>
-                
+
                 <button class="menu-btn" onclick="game.showCredits()" id="menu-credits">
                     <span id="menu-credits-text">Crediti</span>
                 </button>
             </div>
-            
+
             <div class="menu-language">
                 <button class="lang-btn" onclick="game.changeLanguageMenu('it')" id="lang-it">IT</button>
                 <button class="lang-btn" onclick="game.changeLanguageMenu('en')" id="lang-en">EN</button>
@@ -53,16 +55,18 @@
     <div id="char-creation" class="hidden">
         <div class="char-panel">
             <h2 id="char-title">Creazione Personaggio</h2>
-            
+
             <div style="margin-bottom: 20px;">
-                <label for="char-name-input" id="char-name-label" style="display: block; margin-bottom: 5px; font-weight: bold;">Nome Personaggio</label>
-                <input type="text" id="char-name-input" placeholder="Inserisci il nome..." style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 6px; font-size: 1em;">
+                <label for="char-name-input" id="char-name-label"
+                    style="display: block; margin-bottom: 5px; font-weight: bold;">Nome Personaggio</label>
+                <input type="text" id="char-name-input" placeholder="Inserisci il nome..."
+                    style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 6px; font-size: 1em;">
             </div>
-            
+
             <p id="char-description">Distribuisci 3 punti tra Forza, Destrezza e Intelligenza</p>
-            
+
             <div class="points-remaining" id="points-display">Punti rimanenti: 3</div>
-            
+
             <div class="char-stat">
                 <span id="str-label">Forza</span>
                 <div class="char-controls">
@@ -71,7 +75,7 @@
                     <button onclick="game.adjustStat('strength', 1)">+</button>
                 </div>
             </div>
-            
+
             <div class="char-stat">
                 <span id="dex-label">Destrezza</span>
                 <div class="char-controls">
@@ -80,7 +84,7 @@
                     <button onclick="game.adjustStat('dexterity', 1)">+</button>
                 </div>
             </div>
-            
+
             <div class="char-stat">
                 <span id="int-label">Intelligenza</span>
                 <div class="char-controls">
@@ -89,13 +93,15 @@
                     <button onclick="game.adjustStat('intelligence', 1)">+</button>
                 </div>
             </div>
-            
+
             <h3 id="perks-title" style="margin-top: 25px; text-align: center;">Vantaggi</h3>
-            <p id="perks-description" style="text-align: center; font-size: 0.9em; margin-bottom: 10px;">Scegli 1 vantaggio</p>
+            <p id="perks-description" style="text-align: center; font-size: 0.9em; margin-bottom: 10px;">Scegli 1
+                vantaggio</p>
             <div class="points-remaining" id="perk-points-display">Punti vantaggi: 1</div>
             <div id="perks-list" style="max-height: 200px; overflow-y: auto; margin: 15px 0;"></div>
-            
-            <button class="btn btn-primary" onclick="game.startGame()" id="start-btn" style="margin-top: 20px;">Inizia Avventura</button>
+
+            <button class="btn btn-primary" onclick="game.startGame()" id="start-btn" style="margin-top: 20px;">Inizia
+                Avventura</button>
         </div>
     </div>
 
@@ -118,10 +124,10 @@
             </div>
         </div>
     </div>
- 	
- 	<!-- Mobile Backdrop -->
+
+    <!-- Mobile Backdrop -->
     <div class="mobile-backdrop" id="mobile-backdrop" onclick="game.closeMobilePanels()"></div>
-    
+
     <!-- Main Game Container -->
     <div class="container hidden" id="game-container">
         <!-- Left Panel: Stats & Inventory -->
@@ -129,24 +135,24 @@
             <button class="panel-toggle left-toggle" onclick="game.togglePanel('left')" title="Nascondi/Mostra">
                 <span id="left-toggle-icon">&lt;</span>
             </button>
-            
+
             <h2 id="stats-title">Statistiche</h2>
-            
+
             <div class="stat-item">
                 <span class="stat-label" id="stat-str">Forza</span>
                 <span class="stat-value" id="stat-str-val">0</span>
             </div>
-            
+
             <div class="stat-item">
                 <span class="stat-label" id="stat-dex">Destrezza</span>
                 <span class="stat-value" id="stat-dex-val">0</span>
             </div>
-            
+
             <div class="stat-item">
                 <span class="stat-label" id="stat-int">Intelligenza</span>
                 <span class="stat-value" id="stat-int-val">0</span>
             </div>
-            
+
             <div class="stat-item">
                 <span class="stat-label" id="stat-health">Vita</span>
                 <span class="stat-value" id="stat-health-val">5/5</span>
@@ -154,7 +160,7 @@
             <div class="stat-bar">
                 <div class="stat-bar-fill" id="health-bar" style="width: 100%"></div>
             </div>
-            
+
             <div class="stat-item">
                 <span class="stat-label" id="stat-sanity">Salute Mentale</span>
                 <span class="stat-value" id="stat-sanity-val">5/5</span>
@@ -162,12 +168,13 @@
             <div class="stat-bar">
                 <div class="stat-bar-fill" id="sanity-bar" style="width: 100%"></div>
             </div>
-            
+
             <h3 id="inventory-title">Inventario</h3>
             <div id="inventory-list">
                 <div class="inventory-empty" id="inventory-empty">Inventario vuoto</div>
             </div>
-            <p style="margin-top: 10px; font-size: 0.9em; color: var(--text-secondary);" id="inventory-capacity">Capacità: 0/5</p>
+            <p style="margin-top: 10px; font-size: 0.9em; color: var(--text-secondary);" id="inventory-capacity">
+                Capacità: 0/5</p>
         </div>
 
         <!-- Center Panel: Story -->
@@ -183,9 +190,9 @@
             <button class="panel-toggle right-toggle" onclick="game.togglePanel('right')" title="Nascondi/Mostra">
                 <span id="right-toggle-icon">&gt;</span>
             </button>
-            
+
             <h2 id="controls-title">Controlli</h2>
-            
+
             <div class="control-group">
                 <h3 id="lang-title">Lingua</h3>
                 <select id="language-select" onchange="game.changeLanguage(this.value)">
@@ -193,35 +200,38 @@
                     <option value="en">English</option>
                 </select>
             </div>
-            
+
             <div class="control-group">
                 <h3 id="theme-title">Tema</h3>
                 <button class="btn btn-secondary" onclick="game.toggleTheme()" id="theme-btn">Tema Scuro</button>
             </div>
-            
+
             <div class="control-group">
                 <h3 id="audio-title">Audio</h3>
-                <button class="btn btn-secondary" onclick="game.toggleMusic()" id="music-toggle">🔊 Disattiva Audio</button>
+                <button class="btn btn-secondary" onclick="game.toggleMusic()" id="music-toggle">🔊 Disattiva
+                    Audio</button>
                 <div style="margin-top: 10px;">
-                    <label id="volume-label" style="display: block; margin-bottom: 5px; font-size: 0.9em; color: var(--text-secondary);">Volume: 50%</label>
-                    <input type="range" id="volume-slider" min="0" max="100" value="50" 
-                           oninput="game.setVolume(this.value / 100); game.updateUI();"
-                           style="width: 100%; cursor: pointer;">
+                    <label id="volume-label"
+                        style="display: block; margin-bottom: 5px; font-size: 0.9em; color: var(--text-secondary);">Volume:
+                        50%</label>
+                    <input type="range" id="volume-slider" min="0" max="100" value="50"
+                        oninput="game.setVolume(this.value / 100); game.updateUI();"
+                        style="width: 100%; cursor: pointer;">
                 </div>
             </div>
-            
+
             <div class="control-group">
                 <h3 id="save-title">Salvataggio</h3>
                 <button class="btn btn-primary" onclick="game.saveGame()" id="save-btn">Salva Partita</button>
                 <button class="btn btn-primary" onclick="game.loadGame()" id="load-btn">Carica Partita</button>
             </div>
-            
+
             <div class="control-group">
                 <button class="btn btn-danger" onclick="game.resetGame()" id="reset-btn">Nuova Partita</button>
             </div>
         </div>
     </div>
-    
+
     <!-- Mobile Bottom Navigation -->
     <div class="mobile-nav" id="mobile-nav">
         <button class="mobile-nav-btn" onclick="game.showMobilePanel('stats')" id="mobile-nav-stats">
@@ -241,6 +251,4 @@
     <script src="js/main.js"></script>
 </body>
 
-    <script src="js/main.js"></script>
-</body>
 </html>
