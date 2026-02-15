@@ -274,6 +274,12 @@ body {
     transform: translateX(-100%);
 }
 
+.left-panel.hidden > *:not(.panel-toggle),
+.right-panel.hidden > *:not(.panel-toggle) {
+    visibility: hidden;
+    overflow: hidden;
+}
+
 .right-panel {
     transform: translateX(0);
     z-index: 20;
