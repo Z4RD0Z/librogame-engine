@@ -538,6 +538,14 @@ const game = {
         }
       }
 
+      if (choice.requirements.notFlags) {
+        for (let flag of choice.requirements.notFlags) {
+          if (this.state.flags.includes(flag)) {
+            return { allowed: false, reason: `${ui.requires}: !${flag}` };
+          }
+        }
+      }
+
       if (choice.requirements.perks) {
         for (let perkId of choice.requirements.perks) {
           if (!this.state.perks.includes(perkId)) {

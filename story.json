@@ -109,6 +109,11 @@
             "next": "entrance_lit",
             "requirements": { "items": ["torch"] },
             "oneshot": true
+          },
+          {
+            "text": "Ascolta i sussurri nell'atrio (solo prima di andare a sinistra)",
+            "next": "entrance",
+            "requirements": { "notFlags": ["went_left"] }
           }
         ]
       },
@@ -400,6 +405,11 @@
             "next": "entrance_lit",
             "requirements": { "items": ["torch"] },
             "oneshot": true
+          },
+          {
+            "text": "Listen to the whispers in the atrium (only before going left)",
+            "next": "entrance",
+            "requirements": { "notFlags": ["went_left"] }
           }
         ]
       },

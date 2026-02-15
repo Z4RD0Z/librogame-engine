@@ -185,6 +185,11 @@ The engine supports three types of requirements that can be combined:
 "requirements": { "flags": ["door_opened", "talked_to_guard"] }
 ```
 
+**Inverse Flags (must NOT be set):**
+```json
+"requirements": { "notFlags": ["door_opened", "boss_defeated"] }
+```
+
 **Perks:**
 ```json
 "requirements": { "perks": ["lockpicker", "night_vision"] }
@@ -195,7 +200,8 @@ The engine supports three types of requirements that can be combined:
 "requirements": {
   "items": ["lockpick"],
   "perks": ["lockpicker"],
-  "flags": ["found_door"]
+  "flags": ["found_door"],
+  "notFlags": ["alarm_triggered"]
 }
 ```
 
