@@ -4,7 +4,7 @@
 
 A powerful, feature-rich engine for creating interactive text-based adventures and gamebooks (choose-your-own-adventure games) using vanilla HTML, CSS, and JavaScript.
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.2-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![JavaScript](https://img.shields.io/badge/javascript-ES6-yellow.svg)
 
