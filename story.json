@@ -452,6 +452,8 @@
       },
       "treasure_room": {
         "text": "The door opens revealing a small treasure room! You find a healing potion and an ancient scroll.",
+        "music": "src/music/treasure.mp3",
+        "musicLoop": false,
         "choices": [
           {
             "text": "Take everything",
