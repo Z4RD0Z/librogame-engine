@@ -365,7 +365,28 @@ Set ambient music per node:
   "music": "src/music/ambient.mp3"
 }
 ```
-Music loops automatically and transitions between nodes.
+The engine supports two ways to specify background music:
+
+1) Simple string (default, loops automatically):
+
+```json
+"node_id": {
+  "music": "src/music/ambient.mp3"
+}
+```
+
+2) Object with options (use this to disable looping or set other audio flags):
+
+```json
+"node_id": {
+  "music": {
+    "src": "src/music/ambient.mp3",
+    "loop": false
+  }
+}
+```
+
+If you use the object form, set `loop` to `false` to play the track only once. When using the simple string form the music will loop by default; the object form allows finer control (looping, volume, etc.). The engine also handles transitions between nodes when background music changes.
 
 ## 🤝 Contributing
 
