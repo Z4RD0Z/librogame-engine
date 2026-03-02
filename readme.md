@@ -383,7 +383,7 @@ The engine supports two ways to specify background music:
   "musicLoop": true
 }
 ```
-If `musicLoop` is set to `true`, and another track is already playing, the engine will stop the current track with a fade-out effect before starting the new track. 
+Whenever a node with `music` is entered and another track is already playing, the engine will stop the current track with a fade-out effect before starting the new track. The `musicLoop` option controls whether the new track should loop. 
 ## 🤝 Contributing
 
 Contributions are welcome! Feel free to:
