@@ -29,13 +29,32 @@ jobs:
         run: |
           set -euo pipefail
 
-          bump_type="fix"
-          if [[ "${{ contains(github.event.pull_request.labels.*.name, 'major') }}" == "true" ]]; then
+          major_label="${{ contains(github.event.pull_request.labels.*.name, 'major') }}"
+          minor_label="${{ contains(github.event.pull_request.labels.*.name, 'minor') }}"
+          fix_label="${{ contains(github.event.pull_request.labels.*.name, 'fix') }}"
+
+          selected_count=0
+          [[ "${major_label}" == "true" ]] && selected_count=$((selected_count + 1))
+          [[ "${minor_label}" == "true" ]] && selected_count=$((selected_count + 1))
+          [[ "${fix_label}" == "true" ]] && selected_count=$((selected_count + 1))
+
+          if [[ "${selected_count}" -gt 1 ]]; then
+            echo "Error: multiple version labels found. Use only one of: major, minor, fix."
+            exit 1
+          fi
+
+          bump_type=""
+          if [[ "${major_label}" == "true" ]]; then
             bump_type="major"
-          elif [[ "${{ contains(github.event.pull_request.labels.*.name, 'minor') }}" == "true" ]]; then
+          elif [[ "${minor_label}" == "true" ]]; then
             bump_type="minor"
-          elif [[ "${{ contains(github.event.pull_request.labels.*.name, 'fix') }}" == "true" ]]; then
+          elif [[ "${fix_label}" == "true" ]]; then
             bump_type="fix"
+          fi
+
+          if [[ -z "${bump_type}" ]]; then
+            echo "Error: missing version label. Add one label among: major, minor, fix."
+            exit 1
           fi
 
           latest_tag="$(git tag --sort=-v:refname | head -n 1 || true)"
