@@ -375,19 +375,15 @@ The engine supports two ways to specify background music:
 }
 ```
 
-2) Object with options (use this to disable looping or set other audio flags):
+2) Music with options (looping control):
 
 ```json
 "node_id": {
-  "music": {
-    "src": "src/music/ambient.mp3",
-    "loop": false
-  }
+  "music": "src/music/ambient.mp3",
+  "musicLoop": true
 }
 ```
-
-If you use the object form, set `loop` to `false` to play the track only once. When using the simple string form the music will loop by default; the object form allows finer control (looping, volume, etc.). The engine also handles transitions between nodes when background music changes.
-
+If `musicLoop` is set to `true`, and another track is already playing, the engine will stop the current track with a fade-out effect before starting the new track. 
 ## 🤝 Contributing
 
 Contributions are welcome! Feel free to:
