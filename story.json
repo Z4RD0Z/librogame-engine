@@ -93,6 +93,7 @@
       "entrance": {
         "text": "Sei nell'atrio della cripta. L'oscurità è quasi totale. A sinistra vedi un corridoio, a destra un'altra porta chiusa.",
         "music": "src/music/crypt_ambient.mp3",
+        "musicLoop": true,
         "choices": [
           {
             "text": "Vai a sinistra nel corridoio",
@@ -153,6 +154,8 @@
       },
       "treasure_room": {
         "text": "La porta si apre rivelando una piccola stanza del tesoro! Trovi una pozione curativa e un'antica pergamena.",
+        "music": "src/music/treasure.mp3",
+        "musicLoop": false,
         "choices": [
           {
             "text": "Prendi tutto",
