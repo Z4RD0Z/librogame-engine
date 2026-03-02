@@ -365,8 +365,25 @@ Set ambient music per node:
   "music": "src/music/ambient.mp3"
 }
 ```
-Music loops automatically and transitions between nodes.
+The engine supports two ways to specify background music:
 
+1) Simple string (default, loops automatically):
+
+```json
+"node_id": {
+  "music": "src/music/ambient.mp3"
+}
+```
+
+2) Music with options (looping control):
+
+```json
+"node_id": {
+  "music": "src/music/ambient.mp3",
+  "musicLoop": true
+}
+```
+Whenever a node with `music` is entered and another track is already playing, the engine will stop the current track with a fade-out effect before starting the new track. The `musicLoop` option controls whether the new track should loop. 
 ## 🤝 Contributing
 
 Contributions are welcome! Feel free to:

@@ -310,20 +310,57 @@ const game = {
     }
   },
 
-  playMusic(musicPath) {
+  async fadeOut(audio, duration = 1000) {
+    if (!audio) return;
+    const initialVolume = audio.volume;
+    const step = initialVolume / (duration / 50);
+    return new Promise((resolve) => {
+      const fade = setInterval(() => {
+        if (audio.volume > step) {
+          audio.volume -= step;
+        } else {
+          audio.volume = 0;
+          clearInterval(fade);
+          resolve();
+        }
+      }, 50);
+    });
+  },
+
+  async fadeIn(audio, targetVolume = 0.5, duration = 1000) {
+    if (!audio) return;
+    audio.volume = 0;
+    const step = targetVolume / (duration / 50);
+    return new Promise((resolve) => {
+      const fade = setInterval(() => {
+        if (audio.volume < targetVolume - step) {
+          audio.volume += step;
+        } else {
+          audio.volume = targetVolume;
+          clearInterval(fade);
+          resolve();
+        }
+      }, 50);
+    });
+  },
+
+  async playMusic(musicPath, loop = true) {
     if (!this.audio.musicEnabled) return;
 
+    // Se c'è una musica in corso, fade out e stop
     if (this.audio.music) {
+      await this.fadeOut(this.audio.music, 800);
       this.audio.music.pause();
       this.audio.music = null;
     }
 
     if (musicPath) {
       this.audio.music = new Audio(musicPath);
-      this.audio.music.volume = this.audio.volume;
-      this.audio.music.loop = true;
+      this.audio.music.loop = loop;
+      this.audio.music.volume = 0;
       this.audio.music
         .play()
+        .then(() => this.fadeIn(this.audio.music, this.audio.volume, 800))
         .catch((e) => console.log("Errore riproduzione musica:", e));
     }
   },
@@ -456,12 +493,14 @@ const game = {
     this.displayNode(this.currentNode);
   },
 
-  displayNode(nodeId) {
+  async displayNode(nodeId) {
     this.currentNode = nodeId;
     const node = this.storyData[this.currentLang].nodes[nodeId];
 
+    // Supporto per musicLoop
     if (node.music) {
-      this.playMusic(node.music);
+      const loop = typeof node.musicLoop === "boolean" ? node.musicLoop : true;
+      await this.playMusic(node.music, loop);
     }
 
     let content = "";
@@ -993,3 +1032,8 @@ document.addEventListener("click", (e) => {
 });
 
 window.onload = () => game.init();
+
+// Export per i test (Node.js / Jest)
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+  module.exports = game;
+}
