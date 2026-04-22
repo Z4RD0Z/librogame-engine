@@ -140,7 +140,13 @@ const game = {
   loadGameFromMenu() {
     const saved = localStorage.getItem("gameSave");
     if (saved) {
-      const data = JSON.parse(saved);
+      let data;
+      try {
+        data = JSON.parse(saved);
+      } catch (e) {
+        alert(this.storyData[this.currentLang].ui.noSaveFound || "Salvataggio corrotto / Save data corrupted");
+        return;
+      }
       this.state = data.state;
       this.currentNode = data.currentNode;
       this.currentLang = data.currentLang;
@@ -198,7 +204,7 @@ const game = {
             <p><strong>${ui.storyLabel || "Story"}:</strong> ${content.story}</p>
             <p><strong>${ui.year || "Year"}:</strong> ${content.year}</p>
             <br>
-            <p>${content.thanks}</loadPanel>
+            <p>${content.thanks}</p>
         `;
   },
 
@@ -414,19 +420,34 @@ const game = {
     const perksData = this.storyData[this.currentLang].perks || [];
     const perksList = document.getElementById("perks-list");
 
-    perksList.innerHTML = perksData
-      .map(
-        (perk) => `
-            <div class="perk-item" data-perk-id="${perk.id}">
-                <input type="checkbox" id="perk-${perk.id}" onchange="game.togglePerk('${perk.id}')">
-                <label for="perk-${perk.id}">
-                    <strong>${perk.name}</strong>
-                    <p style="font-size: 0.85em; color: var(--text-secondary); margin: 2px 0 0 0;">${perk.description}</p>
-                </label>
-            </div>
-        `,
-      )
-      .join("");
+    perksList.innerHTML = "";
+
+    perksData.forEach((perk) => {
+      const div = document.createElement("div");
+      div.className = "perk-item";
+      div.dataset.perkId = perk.id;
+
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.id = `perk-${perk.id}`;
+      checkbox.addEventListener("change", () => this.togglePerk(perk.id));
+
+      const label = document.createElement("label");
+      label.htmlFor = `perk-${perk.id}`;
+
+      const strong = document.createElement("strong");
+      strong.textContent = perk.name;
+
+      const desc = document.createElement("p");
+      desc.style.cssText = "font-size: 0.85em; color: var(--text-secondary); margin: 2px 0 0 0;";
+      desc.textContent = perk.description;
+
+      label.appendChild(strong);
+      label.appendChild(desc);
+      div.appendChild(checkbox);
+      div.appendChild(label);
+      perksList.appendChild(div);
+    });
   },
 
   togglePerk(perkId) {
@@ -773,18 +794,31 @@ const game = {
     else if (sanityPercent <= 60) sanityBar.classList.add("warning");
 
     const inventoryList = document.getElementById("inventory-list");
+    inventoryList.innerHTML = "";
     if (this.state.inventory.length === 0) {
-      inventoryList.innerHTML = `<div class="inventory-empty">${ui.inventoryEmpty}</div>`;
+      const empty = document.createElement("div");
+      empty.className = "inventory-empty";
+      empty.textContent = ui.inventoryEmpty;
+      inventoryList.appendChild(empty);
     } else {
-      inventoryList.innerHTML = this.state.inventory
-        .map((item, index) => {
-          const itemData = this.storyData[this.currentLang].items[item.id];
-          return `<div class="inventory-item" onclick="game.showItemModal('${item.id}', ${index})">
-                    <span class="inventory-item-icon">${itemData.icon || "📦"}</span>
-                    <span>${item.name}</span>
-                </div>`;
-        })
-        .join("");
+      this.state.inventory.forEach((item, index) => {
+        const itemData = this.storyData[this.currentLang].items[item.id];
+
+        const div = document.createElement("div");
+        div.className = "inventory-item";
+        div.addEventListener("click", () => this.showItemModal(item.id, index));
+
+        const icon = document.createElement("span");
+        icon.className = "inventory-item-icon";
+        icon.textContent = itemData.icon || "📦";
+
+        const name = document.createElement("span");
+        name.textContent = item.name;
+
+        div.appendChild(icon);
+        div.appendChild(name);
+        inventoryList.appendChild(div);
+      });
     }
 
     const maxCapacity = this.state.stats.strength + 5;
@@ -934,7 +968,13 @@ const game = {
   loadGame() {
     const saved = localStorage.getItem("gameSave");
     if (saved) {
-      const data = JSON.parse(saved);
+      let data;
+      try {
+        data = JSON.parse(saved);
+      } catch (e) {
+        alert("Salvataggio corrotto / Save data corrupted");
+        return;
+      }
       this.state = data.state;
       this.currentNode = data.currentNode;
       this.currentLang = data.currentLang;
