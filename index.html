@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self'; font-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
     <title>Librogame Engine</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -15,22 +16,22 @@
             <h1 id="game-title" class="game-title">L'Antica Cripta</h1>
 
             <div class="menu-buttons">
-                <button class="menu-btn" onclick="game.newGame()" id="menu-new-game">
+                <button class="menu-btn" id="menu-new-game">
                     <span id="menu-new-text">Nuova Partita</span>
                 </button>
 
-                <button class="menu-btn" onclick="game.loadGameFromMenu()" id="menu-load-game">
+                <button class="menu-btn" id="menu-load-game">
                     <span id="menu-load-text">Carica Partita</span>
                 </button>
 
-                <button class="menu-btn" onclick="game.showCredits()" id="menu-credits">
+                <button class="menu-btn" id="menu-credits">
                     <span id="menu-credits-text">Crediti</span>
                 </button>
             </div>
 
             <div class="menu-language">
-                <button class="lang-btn" onclick="game.changeLanguageMenu('it')" id="lang-it">IT</button>
-                <button class="lang-btn" onclick="game.changeLanguageMenu('en')" id="lang-en">EN</button>
+                <button class="lang-btn" id="lang-it">IT</button>
+                <button class="lang-btn" id="lang-en">EN</button>
             </div>
         </div>
     </div>
@@ -47,7 +48,7 @@
                 <br>
                 <p>Grazie per aver giocato!</p>
             </div>
-            <button class="btn btn-primary" onclick="game.hideCredits()" id="credits-back">Indietro</button>
+            <button class="btn btn-primary" id="credits-back">Indietro</button>
         </div>
     </div>
 
@@ -70,27 +71,27 @@
             <div class="char-stat">
                 <span id="str-label">Forza</span>
                 <div class="char-controls">
-                    <button onclick="game.adjustStat('strength', -1)">-</button>
+                    <button id="str-minus">-</button>
                     <span class="stat-value" id="str-value">0</span>
-                    <button onclick="game.adjustStat('strength', 1)">+</button>
+                    <button id="str-plus">+</button>
                 </div>
             </div>
 
             <div class="char-stat">
                 <span id="dex-label">Destrezza</span>
                 <div class="char-controls">
-                    <button onclick="game.adjustStat('dexterity', -1)">-</button>
+                    <button id="dex-minus">-</button>
                     <span class="stat-value" id="dex-value">0</span>
-                    <button onclick="game.adjustStat('dexterity', 1)">+</button>
+                    <button id="dex-plus">+</button>
                 </div>
             </div>
 
             <div class="char-stat">
                 <span id="int-label">Intelligenza</span>
                 <div class="char-controls">
-                    <button onclick="game.adjustStat('intelligence', -1)">-</button>
+                    <button id="int-minus">-</button>
                     <span class="stat-value" id="int-value">0</span>
-                    <button onclick="game.adjustStat('intelligence', 1)">+</button>
+                    <button id="int-plus">+</button>
                 </div>
             </div>
 
@@ -100,7 +101,7 @@
             <div class="points-remaining" id="perk-points-display">Punti vantaggi: 1</div>
             <div id="perks-list" style="max-height: 200px; overflow-y: auto; margin: 15px 0;"></div>
 
-            <button class="btn btn-primary" onclick="game.startGame()" id="start-btn" style="margin-top: 20px;">Inizia
+            <button class="btn btn-primary" id="start-btn" style="margin-top: 20px;">Inizia
                 Avventura</button>
         </div>
     </div>
@@ -115,7 +116,7 @@
     <!-- Item Modal -->
     <div id="item-modal" class="modal hidden">
         <div class="modal-content">
-            <span class="modal-close" onclick="game.closeItemModal()">&times;</span>
+            <span class="modal-close" id="item-modal-close">&times;</span>
             <div class="modal-body">
                 <img id="item-image" src="" alt="Item">
                 <h3 id="item-name">Nome Oggetto</h3>
@@ -126,13 +127,13 @@
     </div>
 
     <!-- Mobile Backdrop -->
-    <div class="mobile-backdrop" id="mobile-backdrop" onclick="game.closeMobilePanels()"></div>
+    <div class="mobile-backdrop" id="mobile-backdrop"></div>
 
     <!-- Main Game Container -->
     <div class="container hidden" id="game-container">
         <!-- Left Panel: Stats & Inventory -->
         <div class="panel left-panel" id="left-panel">
-            <button class="panel-toggle left-toggle" onclick="game.togglePanel('left')" title="Nascondi/Mostra">
+            <button class="panel-toggle left-toggle" id="left-toggle-btn" title="Nascondi/Mostra">
                 <span id="left-toggle-icon">&lt;</span>
             </button>
 
@@ -187,7 +188,7 @@
 
         <!-- Right Panel: Controls -->
         <div class="panel right-panel" id="right-panel">
-            <button class="panel-toggle right-toggle" onclick="game.togglePanel('right')" title="Nascondi/Mostra">
+            <button class="panel-toggle right-toggle" id="right-toggle-btn" title="Nascondi/Mostra">
                 <span id="right-toggle-icon">&gt;</span>
             </button>
 
@@ -195,7 +196,7 @@
 
             <div class="control-group">
                 <h3 id="lang-title">Lingua</h3>
-                <select id="language-select" onchange="game.changeLanguage(this.value)">
+                <select id="language-select">
                     <option value="it">Italiano</option>
                     <option value="en">English</option>
                 </select>
@@ -203,51 +204,51 @@
 
             <div class="control-group">
                 <h3 id="theme-title">Tema</h3>
-                <button class="btn btn-secondary" onclick="game.toggleTheme()" id="theme-btn">Tema Scuro</button>
+                <button class="btn btn-secondary" id="theme-btn">Tema Scuro</button>
             </div>
 
             <div class="control-group">
                 <h3 id="audio-title">Audio</h3>
-                <button class="btn btn-secondary" onclick="game.toggleMusic()" id="music-toggle">🔊 Disattiva
+                <button class="btn btn-secondary" id="music-toggle">🔊 Disattiva
                     Audio</button>
                 <div style="margin-top: 10px;">
                     <label id="volume-label"
                         style="display: block; margin-bottom: 5px; font-size: 0.9em; color: var(--text-secondary);">Volume:
                         50%</label>
                     <input type="range" id="volume-slider" min="0" max="100" value="50"
-                        oninput="game.setVolume(this.value / 100); game.updateUI();"
                         style="width: 100%; cursor: pointer;">
                 </div>
             </div>
 
             <div class="control-group">
                 <h3 id="save-title">Salvataggio</h3>
-                <button class="btn btn-primary" onclick="game.saveGame()" id="save-btn">Salva Partita</button>
-                <button class="btn btn-primary" onclick="game.loadGame()" id="load-btn">Carica Partita</button>
+                <button class="btn btn-primary" id="save-btn">Salva Partita</button>
+                <button class="btn btn-primary" id="load-btn">Carica Partita</button>
             </div>
 
             <div class="control-group">
-                <button class="btn btn-danger" onclick="game.resetGame()" id="reset-btn">Nuova Partita</button>
+                <button class="btn btn-danger" id="reset-btn">Nuova Partita</button>
             </div>
         </div>
     </div>
 
     <!-- Mobile Bottom Navigation -->
     <div class="mobile-nav" id="mobile-nav">
-        <button class="mobile-nav-btn" onclick="game.showMobilePanel('stats')" id="mobile-nav-stats">
+        <button class="mobile-nav-btn" id="mobile-nav-stats">
             <span class="mobile-nav-icon">📊</span>
             <span class="mobile-nav-label" id="mobile-nav-stats-label">Stats</span>
         </button>
-        <button class="mobile-nav-btn active" onclick="game.showMobilePanel('story')" id="mobile-nav-story">
+        <button class="mobile-nav-btn active" id="mobile-nav-story">
             <span class="mobile-nav-icon">📖</span>
             <span class="mobile-nav-label" id="mobile-nav-story-label">Storia</span>
         </button>
-        <button class="mobile-nav-btn" onclick="game.showMobilePanel('controls')" id="mobile-nav-controls">
+        <button class="mobile-nav-btn" id="mobile-nav-controls">
             <span class="mobile-nav-icon">⚙️</span>
             <span class="mobile-nav-label" id="mobile-nav-controls-label">Menu</span>
         </button>
     </div>
 
+    <script src="js/purify.min.js"></script>
     <script src="js/main.js"></script>
 </body>
 

@@ -35,11 +35,47 @@ const game = {
   },
 
   async init() {
+    this.bindUIEvents();
     this.loadTheme();
     this.initAudio();
     this.loadPanelStates();
     await this.loadStoryData();
     this.updateMainMenu();
+  },
+
+  bindUIEvents() {
+    document.getElementById("menu-new-game").addEventListener("click", () => this.newGame());
+    document.getElementById("menu-load-game").addEventListener("click", () => this.loadGameFromMenu());
+    document.getElementById("menu-credits").addEventListener("click", () => this.showCredits());
+    document.getElementById("lang-it").addEventListener("click", () => this.changeLanguageMenu("it"));
+    document.getElementById("lang-en").addEventListener("click", () => this.changeLanguageMenu("en"));
+    document.getElementById("credits-back").addEventListener("click", () => this.hideCredits());
+
+    document.getElementById("str-minus").addEventListener("click", () => this.adjustStat("strength", -1));
+    document.getElementById("str-plus").addEventListener("click", () => this.adjustStat("strength", 1));
+    document.getElementById("dex-minus").addEventListener("click", () => this.adjustStat("dexterity", -1));
+    document.getElementById("dex-plus").addEventListener("click", () => this.adjustStat("dexterity", 1));
+    document.getElementById("int-minus").addEventListener("click", () => this.adjustStat("intelligence", -1));
+    document.getElementById("int-plus").addEventListener("click", () => this.adjustStat("intelligence", 1));
+    document.getElementById("start-btn").addEventListener("click", () => this.startGame());
+    document.getElementById("item-modal-close").addEventListener("click", () => this.closeItemModal());
+
+    document.getElementById("left-toggle-btn").addEventListener("click", () => this.togglePanel("left"));
+    document.getElementById("right-toggle-btn").addEventListener("click", () => this.togglePanel("right"));
+    document.getElementById("language-select").addEventListener("change", (e) => this.changeLanguage(e.target.value));
+    document.getElementById("theme-btn").addEventListener("click", () => this.toggleTheme());
+    document.getElementById("music-toggle").addEventListener("click", () => this.toggleMusic());
+    document.getElementById("volume-slider").addEventListener("input", (e) => {
+      this.setVolume(e.target.value / 100);
+      this.updateUI();
+    });
+
+    document.getElementById("save-btn").addEventListener("click", () => this.saveGame());
+    document.getElementById("load-btn").addEventListener("click", () => this.loadGame());
+    document.getElementById("reset-btn").addEventListener("click", () => this.resetGame());
+    document.getElementById("mobile-nav-stats").addEventListener("click", () => this.showMobilePanel("stats"));
+    document.getElementById("mobile-nav-story").addEventListener("click", () => this.showMobilePanel("story"));
+    document.getElementById("mobile-nav-controls").addEventListener("click", () => this.showMobilePanel("controls"));
   },
 
   isMobile() {
@@ -198,14 +234,14 @@ const game = {
       thanks: "Grazie per aver giocato!",
     };
 
-    document.getElementById("credits-content").innerHTML = `
+    document.getElementById("credits-content").innerHTML = DOMPurify.sanitize(`
             <p><strong>${ui.developer || "Developed by"}:</strong> ${content.developer}</p>
             <p><strong>${ui.engine || "Engine"}:</strong> ${content.engine}</p>
             <p><strong>${ui.storyLabel || "Story"}:</strong> ${content.story}</p>
             <p><strong>${ui.year || "Year"}:</strong> ${content.year}</p>
             <br>
             <p>${content.thanks}</p>
-        `;
+        `);
   },
 
   loadPanelStates() {
@@ -533,7 +569,7 @@ const game = {
     const processedText = this.processColoredText(node.text);
     content += `<p>${processedText}</p>`;
 
-    document.getElementById("story-content").innerHTML = content;
+    document.getElementById("story-content").innerHTML = DOMPurify.sanitize(content, { ALLOWED_TAGS: ["p", "img", "span", "div"], ALLOWED_ATTR: ["class", "src", "alt"] });
 
     const choicesContainer = document.getElementById("choices-container");
     choicesContainer.innerHTML = "";
@@ -574,7 +610,7 @@ const game = {
       return `<div class="dialogue text-${color}">${content}</div>`;
     });
 
-    return text;
+    return DOMPurify.sanitize(text, { ALLOWED_TAGS: ["span", "div"], ALLOWED_ATTR: ["class"] });
   },
 
   checkRequirements(choice) {
@@ -682,19 +718,19 @@ const game = {
           const success = total >= test.difficulty;
 
           const finalSymbols = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
-          displayEl.innerHTML = `
+            displayEl.innerHTML = DOMPurify.sanitize(`
                         <div style="font-size: 2em; margin-bottom: 10px;">
                             ${finalSymbols[dice1 - 1]} ${finalSymbols[dice2 - 1]}
                         </div>
                         <div style="font-size: 1.2em; color: var(--text-secondary);">
                             ${dice1} + ${dice2} ${bonus > 0 ? `+ ${bonus}` : ""} = ${total}
                         </div>
-                    `;
+                `);
 
-          resultEl.innerHTML = success
+          resultEl.innerHTML = DOMPurify.sanitize(success
             ? `<strong style="color: var(--success); font-size: 1.3em;">✅ ${ui.testSuccess || "Successo"}!</strong>`
             : `<strong style="color: var(--danger); font-size: 1.3em;">❌ ${ui.testFailed || "Fallimento"}</strong><br>
-                         <span style="font-size: 0.9em;">(${ui.needed || "Serviva"} ${test.difficulty})</span>`;
+                         <span style="font-size: 0.9em;">(${ui.needed || "Serviva"} ${Number(test.difficulty)})</span>`);
 
           setTimeout(() => {
             diceEl.classList.add("hidden");
