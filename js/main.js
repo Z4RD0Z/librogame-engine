@@ -35,11 +35,47 @@ const game = {
   },
 
   async init() {
+    this.bindUIEvents();
     this.loadTheme();
     this.initAudio();
     this.loadPanelStates();
     await this.loadStoryData();
     this.updateMainMenu();
+  },
+
+  bindUIEvents() {
+    document.getElementById("menu-new-game").addEventListener("click", () => this.newGame());
+    document.getElementById("menu-load-game").addEventListener("click", () => this.loadGameFromMenu());
+    document.getElementById("menu-credits").addEventListener("click", () => this.showCredits());
+    document.getElementById("lang-it").addEventListener("click", () => this.changeLanguageMenu("it"));
+    document.getElementById("lang-en").addEventListener("click", () => this.changeLanguageMenu("en"));
+    document.getElementById("credits-back").addEventListener("click", () => this.hideCredits());
+
+    document.getElementById("str-minus").addEventListener("click", () => this.adjustStat("strength", -1));
+    document.getElementById("str-plus").addEventListener("click", () => this.adjustStat("strength", 1));
+    document.getElementById("dex-minus").addEventListener("click", () => this.adjustStat("dexterity", -1));
+    document.getElementById("dex-plus").addEventListener("click", () => this.adjustStat("dexterity", 1));
+    document.getElementById("int-minus").addEventListener("click", () => this.adjustStat("intelligence", -1));
+    document.getElementById("int-plus").addEventListener("click", () => this.adjustStat("intelligence", 1));
+    document.getElementById("start-btn").addEventListener("click", () => this.startGame());
+    document.getElementById("item-modal-close").addEventListener("click", () => this.closeItemModal());
+
+    document.getElementById("left-toggle-btn").addEventListener("click", () => this.togglePanel("left"));
+    document.getElementById("right-toggle-btn").addEventListener("click", () => this.togglePanel("right"));
+    document.getElementById("language-select").addEventListener("change", (e) => this.changeLanguage(e.target.value));
+    document.getElementById("theme-btn").addEventListener("click", () => this.toggleTheme());
+    document.getElementById("music-toggle").addEventListener("click", () => this.toggleMusic());
+    document.getElementById("volume-slider").addEventListener("input", (e) => {
+      this.setVolume(e.target.value / 100);
+      this.updateUI();
+    });
+
+    document.getElementById("save-btn").addEventListener("click", () => this.saveGame());
+    document.getElementById("load-btn").addEventListener("click", () => this.loadGame());
+    document.getElementById("reset-btn").addEventListener("click", () => this.resetGame());
+    document.getElementById("mobile-nav-stats").addEventListener("click", () => this.showMobilePanel("stats"));
+    document.getElementById("mobile-nav-story").addEventListener("click", () => this.showMobilePanel("story"));
+    document.getElementById("mobile-nav-controls").addEventListener("click", () => this.showMobilePanel("controls"));
   },
 
   isMobile() {
