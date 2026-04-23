@@ -89,7 +89,8 @@ cd librogame-engine
    - Add your own nodes, choices, items, and perks
 
 4. **Launch the game**
-   - Open `index.html` in a web browser
+   - Deploy on a static host (itch.io, GitHub Pages, Nginx, etc.)
+   - Or run locally with a simple static server: `python -m http.server` and open `http://localhost:8000`
    - No build process required!
 
 ## 📖 Creating Your Story
@@ -320,8 +321,8 @@ Edit the `credits` section in `story.json`:
 
 ### Dependencies
 - **[DOMPurify](https://github.com/cure53/DOMPurify)** - Bundled locally (`js/purify.min.js`), used to sanitize all HTML rendered via `innerHTML` (story content, credits, colored text, dice results)
-- **No build tools** - Just open and play
-- **No server needed** - Runs entirely client-side
+- **No build tools** - No compilation or bundling required
+- **No backend needed** - Deploy on any static host (itch.io, GitHub Pages, Nginx, `python -m http.server`, etc.) — opening `index.html` directly via `file://` will not work due to browser CORS restrictions on `fetch()`
 
 ### Security
 All user-facing HTML output is passed through `DOMPurify.sanitize()` before being injected into the DOM, preventing XSS from malicious story content. Allowed tags and attributes are restricted per context:
