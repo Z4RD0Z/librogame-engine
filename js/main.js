@@ -198,14 +198,14 @@ const game = {
       thanks: "Grazie per aver giocato!",
     };
 
-    document.getElementById("credits-content").innerHTML = `
+    document.getElementById("credits-content").innerHTML = DOMPurify.sanitize(`
             <p><strong>${ui.developer || "Developed by"}:</strong> ${content.developer}</p>
             <p><strong>${ui.engine || "Engine"}:</strong> ${content.engine}</p>
             <p><strong>${ui.storyLabel || "Story"}:</strong> ${content.story}</p>
             <p><strong>${ui.year || "Year"}:</strong> ${content.year}</p>
             <br>
             <p>${content.thanks}</p>
-        `;
+        `);
   },
 
   loadPanelStates() {
@@ -533,7 +533,7 @@ const game = {
     const processedText = this.processColoredText(node.text);
     content += `<p>${processedText}</p>`;
 
-    document.getElementById("story-content").innerHTML = content;
+    document.getElementById("story-content").innerHTML = DOMPurify.sanitize(content, { ALLOWED_TAGS: ["p", "img", "span", "div"], ALLOWED_ATTR: ["class", "src", "alt"] });
 
     const choicesContainer = document.getElementById("choices-container");
     choicesContainer.innerHTML = "";
@@ -574,7 +574,7 @@ const game = {
       return `<div class="dialogue text-${color}">${content}</div>`;
     });
 
-    return text;
+    return DOMPurify.sanitize(text, { ALLOWED_TAGS: ["span", "div"], ALLOWED_ATTR: ["class"] });
   },
 
   checkRequirements(choice) {
@@ -691,10 +691,10 @@ const game = {
                         </div>
                     `;
 
-          resultEl.innerHTML = success
+          resultEl.innerHTML = DOMPurify.sanitize(success
             ? `<strong style="color: var(--success); font-size: 1.3em;">✅ ${ui.testSuccess || "Successo"}!</strong>`
             : `<strong style="color: var(--danger); font-size: 1.3em;">❌ ${ui.testFailed || "Fallimento"}</strong><br>
-                         <span style="font-size: 0.9em;">(${ui.needed || "Serviva"} ${test.difficulty})</span>`;
+                         <span style="font-size: 0.9em;">(${ui.needed || "Serviva"} ${Number(test.difficulty)})</span>`);
 
           setTimeout(() => {
             diceEl.classList.add("hidden");
