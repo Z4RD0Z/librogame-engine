@@ -718,14 +718,14 @@ const game = {
           const success = total >= test.difficulty;
 
           const finalSymbols = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
-          displayEl.innerHTML = `
+            displayEl.innerHTML = DOMPurify.sanitize(`
                         <div style="font-size: 2em; margin-bottom: 10px;">
                             ${finalSymbols[dice1 - 1]} ${finalSymbols[dice2 - 1]}
                         </div>
                         <div style="font-size: 1.2em; color: var(--text-secondary);">
                             ${dice1} + ${dice2} ${bonus > 0 ? `+ ${bonus}` : ""} = ${total}
                         </div>
-                    `;
+                `);
 
           resultEl.innerHTML = DOMPurify.sanitize(success
             ? `<strong style="color: var(--success); font-size: 1.3em;">✅ ${ui.testSuccess || "Successo"}!</strong>`
