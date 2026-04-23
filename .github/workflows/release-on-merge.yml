@@ -124,9 +124,29 @@ jobs:
           git tag "${tag}"
           git push origin "${tag}"
 
+      - name: Create release archive
+        id: archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="${{ steps.version.outputs.next_tag }}"
+          archive="librogame-engine-${tag}.zip"
+
+          zip -r "${archive}" index.html js/ styles.css story.json LICENSE
+          echo "archive=${archive}" >> "$GITHUB_OUTPUT"
+
+      - name: Generate SHA256 checksum
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha256sum "${{ steps.archive.outputs.archive }}" > SHA256SUMS.txt
+
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.next_tag }}
           name: Release ${{ steps.version.outputs.next_tag }}
           generate_release_notes: true
+          files: |
+            ${{ steps.archive.outputs.archive }}
+            SHA256SUMS.txt

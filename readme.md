@@ -60,7 +60,8 @@ librogame-engine/
 ├── styles.css          # All styling
 ├── story.json          # Story content, items, perks, and translations
 ├── js/
-│   └── main.js         # Game engine logic
+│   ├── main.js         # Game engine logic
+│   └── purify.min.js   # DOMPurify – HTML sanitization library
 └── src/
     ├── images/
     │   ├── menu-background.jpg   # Menu background (optional)
@@ -317,10 +318,16 @@ Edit the `credits` section in `story.json`:
 - HTML5 Audio API
 - LocalStorage API
 
-### No Dependencies
-- **Pure Vanilla JavaScript** - No frameworks required
+### Dependencies
+- **[DOMPurify](https://github.com/cure53/DOMPurify)** - Bundled locally (`js/purify.min.js`), used to sanitize all HTML rendered via `innerHTML` (story content, credits, colored text, dice results)
 - **No build tools** - Just open and play
 - **No server needed** - Runs entirely client-side
+
+### Security
+All user-facing HTML output is passed through `DOMPurify.sanitize()` before being injected into the DOM, preventing XSS from malicious story content. Allowed tags and attributes are restricted per context:
+- **Story content**: `<p>`, `<img>`, `<span>`, `<div>` — attributes: `class`, `src`, `alt`
+- **Colored text / dialogue**: `<span>`, `<div>` — attribute: `class`
+- **Credits / dice results**: default DOMPurify policy
 
 ### File Size
 - Lightweight engine (~50KB total uncompressed)
