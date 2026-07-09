@@ -1049,6 +1049,12 @@ const game = {
       };
       this.currentNode = "start";
 
+	  if(this.audio.music)
+	  {
+	  this.fadeOut(this.audio.music, 800);
+	  this.audio.music.pause();
+	  this.audio.music = null;
+	  }
       document.getElementById("game-container").classList.add("hidden");
       document.getElementById("main-menu").classList.remove("hidden");
       this.updateMainMenu();
