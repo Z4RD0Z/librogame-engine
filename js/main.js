@@ -206,7 +206,7 @@ const game = {
     } else {
       alert(
         this.storyData[this.currentLang].ui.noSaveFound ||
-          "Nessun salvataggio trovato / No save found",
+        "Nessun salvataggio trovato / No save found",
       );
     }
   },
@@ -718,7 +718,7 @@ const game = {
           const success = total >= test.difficulty;
 
           const finalSymbols = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
-            displayEl.innerHTML = DOMPurify.sanitize(`
+          displayEl.innerHTML = DOMPurify.sanitize(`
                         <div style="font-size: 2em; margin-bottom: 10px;">
                             ${finalSymbols[dice1 - 1]} ${finalSymbols[dice2 - 1]}
                         </div>
@@ -961,7 +961,7 @@ const game = {
     if (
       confirm(
         this.storyData[this.currentLang].ui.confirmDrop ||
-          "Sei sicuro di voler eliminare questo oggetto?",
+        "Sei sicuro di voler eliminare questo oggetto?",
       )
     ) {
       this.state.inventory.splice(inventoryIndex, 1);
@@ -1027,7 +1027,7 @@ const game = {
     if (
       confirm(
         this.storyData[this.currentLang].ui.confirmRestart ||
-          "Sei sicuro di voler ricominciare? / Are you sure you want to restart?",
+        "Sei sicuro di voler ricominciare? / Are you sure you want to restart?",
       )
     ) {
       this.state = {
@@ -1049,12 +1049,12 @@ const game = {
       };
       this.currentNode = "start";
 
-	  if(this.audio.music)
-	  {
-	  this.fadeOut(this.audio.music, 800);
-	  this.audio.music.pause();
-	  this.audio.music = null;
-	  }
+      if (this.audio.music) {
+        this.fadeOut(this.audio.music, 800);
+        this.audio.music.pause();
+        this.audio.music = null;
+      }
+
       document.getElementById("game-container").classList.add("hidden");
       document.getElementById("main-menu").classList.remove("hidden");
       this.updateMainMenu();
