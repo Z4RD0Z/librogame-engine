@@ -1,5 +1,7 @@
 # 🎮 Librogame Engine
 
+![logo](assets/paper_&_dice.jpeg)
+
 *“librogame (Italian term for gamebooks / interactive fiction)”*
 
 A powerful, feature-rich engine for creating interactive text-based adventures and gamebooks (choose-your-own-adventure games) using vanilla HTML, CSS, and JavaScript.
