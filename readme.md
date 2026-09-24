@@ -1,6 +1,6 @@
 # 🎮 Librogame Engine
 
-![logo](assets/paper_&_dice.jpeg)
+![logo](assets/paper_&_dice_black.jpeg)
 
 *“librogame (Italian term for gamebooks / interactive fiction)”*
 
