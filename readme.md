@@ -89,6 +89,7 @@ cd librogame-engine
 3. **Customize your story**
    - Edit `story.json` to create your adventure
    - Add your own nodes, choices, items, and perks
+  - If you prefer to write your story in Markdown, you can use the [libro-game-engine-md2json-story-converter](https://github.com/Z4RD0Z/libro-game-engine-md2json-story-converter) to convert it into the story JSON format
 
 4. **Launch the game**
    - Deploy on a static host (itch.io, GitHub Pages, Nginx, etc.)
