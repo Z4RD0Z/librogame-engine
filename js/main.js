@@ -448,6 +448,7 @@ const game = {
 
   showCharCreation() {
     document.getElementById("char-creation").classList.remove("hidden");
+    this.updateUI();
     this.loadPerks();
     this.updateCharCreation();
   },
@@ -857,7 +858,8 @@ const game = {
       });
     }
 
-    const maxCapacity = this.state.stats.strength + 5;
+    const strongBackBonus = this.state.perks.includes("strong_back") ? 3 : 0;
+    const maxCapacity = this.state.stats.strength + 5 + strongBackBonus;
     document.getElementById("inventory-capacity").textContent =
       `${ui.capacity}: ${this.state.inventory.length}/${maxCapacity}`;
 
@@ -887,6 +889,13 @@ const game = {
     document.getElementById("char-title").textContent = ui.charCreation;
     document.getElementById("char-description").textContent =
       ui.charDescription;
+    if (ui.perksTitle) {
+      document.getElementById("perks-title").textContent = ui.perksTitle;
+    }
+    if (ui.perksDescription) {
+      document.getElementById("perks-description").textContent =
+        ui.perksDescription;
+    }
     document.getElementById("str-label").textContent = ui.strength;
     document.getElementById("dex-label").textContent = ui.dexterity;
     document.getElementById("int-label").textContent = ui.intelligence;
@@ -943,7 +952,11 @@ const game = {
     const itemData = this.storyData[this.currentLang].items[itemId];
 
     if (itemData.effects) {
-      this.applyEffects(itemData.effects);
+      const effects = { ...itemData.effects };
+      if (effects.health && this.state.perks.includes("medic")) {
+        effects.health *= 2;
+      }
+      this.applyEffects(effects);
     }
 
     const item = this.state.inventory[inventoryIndex];
