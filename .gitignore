@@ -1,1 +1,24 @@
+# Engine media assets
 src/*
+
+# Local backups
+*.bkp
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Docusaurus dependencies and generated output
+website/node_modules/
+website/build/
+website/.docusaurus/
+website/.cache-loader/
+
+# Docusaurus local environment and logs
+website/.env
+website/.env.local
+website/.env.*.local
+website/npm-debug.log*
+website/yarn-debug.log*
+website/yarn-error.log*
+website/.DS_Store

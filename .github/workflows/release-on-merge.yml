@@ -124,7 +124,7 @@ jobs:
           git tag "${tag}"
           git push origin "${tag}"
 
-      - name: Create release archive
+      - name: Create engine release archive
         id: archive
         shell: bash
         run: |
@@ -132,7 +132,15 @@ jobs:
           tag="${{ steps.version.outputs.next_tag }}"
           archive="librogame-engine-${tag}.zip"
 
+          # Engine bundle only. Documentation (website/) and tools/ are
+          # intentionally excluded from the release.
           zip -r "${archive}" index.html js/ styles.css story.json LICENSE
+
+          if unzip -Z1 "${archive}" | grep -qE '^(website|tools)/'; then
+            echo "ERROR: release archive contains documentation or tools"
+            exit 1
+          fi
+
           echo "archive=${archive}" >> "$GITHUB_OUTPUT"
 
       - name: Generate SHA256 checksum
