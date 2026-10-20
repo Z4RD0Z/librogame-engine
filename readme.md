@@ -101,7 +101,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## 📧 Contact
 
 - GitHub Issues: [Create an issue](https://github.com/Z4RD0Z/librogame-engine/issues)
-- Email: [elaphe@outlook.it](mailto:elaphe@outlook.it)
+- Email: [send email](mailto:zrdz.blinking895@passinbox.com)
 
 ---
 
